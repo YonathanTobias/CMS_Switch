@@ -269,4 +269,13 @@ class DivisionCmsTest extends TestCase
         $deleteResponse->assertSessionHas('success');
         $this->assertEmpty(Setting::get('organization_chart_image'));
     }
+
+    public function test_unauthenticated_user_redirects_to_login()
+    {
+        $response = $this->get('/admin/dashboard');
+        $response->assertRedirect(route('admin.login'));
+
+        $loginAliasResponse = $this->get('/login');
+        $loginAliasResponse->assertRedirect(route('admin.login'));
+    }
 }

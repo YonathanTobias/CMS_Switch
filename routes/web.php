@@ -57,6 +57,8 @@ Route::post('/kontak/kirim', [HomeController::class, 'sendMessage'])->name('cont
 | Admin Authentication Routes
 |--------------------------------------------------------------------------
 */
+Route::get('/login', fn () => redirect()->route('admin.login'))->name('login');
+
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
