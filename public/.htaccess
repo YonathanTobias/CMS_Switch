@@ -1,9 +1,23 @@
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
+        Options -MultiViews -Indexes -ExecCGI
     </IfModule>
 
     RewriteEngine On
+
+    # 1. Block HTTP methods (TRACE, TRACK) often used in XSS/Proxy attacks
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK) [NC]
+    RewriteRule .* - [F]
+
+    # 2. Block access to hidden files and sensitive extensions (.env, .git, .sqlite, .sql, .log, .bak, .yml, .lock, .key)
+    RewriteRule "(^|/)\.(?!well-known)" - [F]
+    <FilesMatch "(?i)\.(env|git|sqlite|sqlite3|sql|log|bak|config|dist|sh|ini|key|lock|yml|yaml|json|twig|md|neon|blade\.php)$">
+        Require all denied
+    </FilesMatch>
+
+    # 3. Block execution of backdoor scripts / PHP in storage or assets directory
+    RewriteCond %{REQUEST_URI} ^/storage/.*\.(php[0-9]?|phtml|phar|pl|py|jsp|asp|sh|cgi)$ [NC]
+    RewriteRule .* - [F,L]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
@@ -23,3 +37,14 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Disable Server Signature
+ServerSignature Off

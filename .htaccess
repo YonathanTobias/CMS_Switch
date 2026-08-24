@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # 1. Block access to hidden files and sensitive configuration files
+    RewriteRule "(^|/)\.(?!well-known)" - [F]
+    <FilesMatch "(?i)\.(env|git|sqlite|sqlite3|sql|log|bak|config|dist|sh|ini|key|lock|yml|yaml|json|twig|md|neon)$">
+        Require all denied
+    </FilesMatch>
+
+    # 2. Block direct access to sensitive system files and folders
+    RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests|vendor|artisan) - [F,L,NC]
+
+    # 3. Redirect all traffic to the public directory
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Disable Directory Browsing
+Options -Indexes -ExecCGI
+
+# Disable Server Signature
+ServerSignature Off
