@@ -100,6 +100,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('posts', PostController::class);
         Route::resource('categories', CategoryController::class)->except(['create', 'show', 'edit']);
         Route::resource('services', ServiceController::class);
+        Route::post('team/chart', [TeamMemberController::class, 'updateChart'])->name('team.chart.update');
+        Route::delete('team/chart', [TeamMemberController::class, 'removeChart'])->name('team.chart.remove');
         Route::resource('team', TeamMemberController::class)->parameters(['team' => 'team']);
         Route::resource('events', EventController::class);
         Route::resource('documents', DocumentController::class);

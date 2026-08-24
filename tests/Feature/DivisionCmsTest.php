@@ -242,4 +242,31 @@ class DivisionCmsTest extends TestCase
         $resetResponse = $this->actingAs($divisionAdmin)->post('/admin/menus/reset-defaults');
         $resetResponse->assertSessionHas('success');
     }
+
+    public function test_admin_can_manage_organization_chart()
+    {
+        $divisionAdmin = User::where('role', 'division_admin')->first();
+
+        // 1. Upload mock chart and set mode
+        \Illuminate\Support\Facades\Storage::fake('public');
+        $file = \Illuminate\Http\UploadedFile::fake()->image('bagan-struktur.png', 800, 600);
+
+        $response = $this->actingAs($divisionAdmin)->post('/admin/team/chart', [
+            'organization_chart' => $file,
+            'organization_display_mode' => 'both',
+        ]);
+        $response->assertSessionHas('success');
+        $this->assertEquals('both', Setting::get('organization_display_mode'));
+        $this->assertNotEmpty(Setting::get('organization_chart_image'));
+
+        // 2. Profile page displays chart diagram
+        $profileResponse = $this->get('/profil');
+        $profileResponse->assertStatus(200);
+        $profileResponse->assertSee('Diagram Bagan Struktur Organisasi');
+
+        // 3. Remove chart
+        $deleteResponse = $this->actingAs($divisionAdmin)->delete('/admin/team/chart');
+        $deleteResponse->assertSessionHas('success');
+        $this->assertEmpty(Setting::get('organization_chart_image'));
+    }
 }

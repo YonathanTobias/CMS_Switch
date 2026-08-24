@@ -85,4 +85,44 @@ class TeamMemberController extends Controller
 
         return back()->with('success', 'Anggota/Pengurus berhasil dihapus.');
     }
+
+    /**
+     * Update organization chart image and display mode
+     */
+    public function updateChart(Request $request)
+    {
+        $request->validate([
+            'organization_chart' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'organization_display_mode' => 'required|in:both,tab,chart_only,members_only',
+        ]);
+
+        if ($request->hasFile('organization_chart')) {
+            $oldChart = \App\Models\Setting::get('organization_chart_image');
+            if ($oldChart && !str_starts_with($oldChart, 'http')) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $oldChart));
+            }
+            $chartPath = '/storage/' . $request->file('organization_chart')->store('organization', 'public');
+            \App\Models\Setting::set('organization_chart_image', $chartPath);
+        }
+
+        \App\Models\Setting::set('organization_display_mode', $request->input('organization_display_mode', 'both'));
+        \App\Models\Setting::clearCache();
+
+        return redirect()->route('admin.team.index')->with('success', 'Bagan struktur organisasi dan mode tampilan berhasil diperbarui.');
+    }
+
+    /**
+     * Remove organization chart image
+     */
+    public function removeChart()
+    {
+        $oldChart = \App\Models\Setting::get('organization_chart_image');
+        if ($oldChart && !str_starts_with($oldChart, 'http')) {
+            Storage::disk('public')->delete(str_replace('/storage/', '', $oldChart));
+        }
+        \App\Models\Setting::set('organization_chart_image', '');
+        \App\Models\Setting::clearCache();
+
+        return redirect()->route('admin.team.index')->with('success', 'Gambar bagan struktur organisasi berhasil dihapus.');
+    }
 }

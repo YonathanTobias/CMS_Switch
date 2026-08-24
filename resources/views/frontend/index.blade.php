@@ -632,8 +632,8 @@
     </div>
 </section>
 
-<!-- Team Members Preview -->
-@if($teamMembers->count() > 0)
+<!-- Team & Organization Preview -->
+@if($teamMembers->count() > 0 || get_setting('organization_chart_image'))
 <section class="py-16 lg:py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-2xl mx-auto space-y-3 mb-12">
@@ -645,6 +645,7 @@
             <p class="text-xs sm:text-sm text-slate-500">Personalia yang siap mendukung dan melayani kebutuhan Anda di {{ get_setting('division_short_name', 'Divisi') }}.</p>
         </div>
 
+        @if($teamMembers->count() > 0)
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($teamMembers as $tm)
             <div class="bg-slate-50 rounded-2xl p-6 text-center border border-slate-200/80 hover:shadow-md transition space-y-3">
@@ -673,6 +674,18 @@
                 @endif
             </div>
             @endforeach
+        </div>
+        @endif
+
+        <div class="text-center mt-10 flex flex-wrap justify-center gap-3">
+            <a href="{{ route('profile') }}#struktur" class="inline-flex items-center px-6 py-3 rounded-xl bg-theme-primary text-white font-bold text-xs uppercase tracking-wider shadow hover:opacity-90 transition">
+                Lihat Seluruh Personil <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+            </a>
+            @if(get_setting('organization_chart_image'))
+            <a href="{{ route('profile') }}#struktur" class="inline-flex items-center px-5 py-3 rounded-xl bg-slate-100 border border-slate-300 font-bold text-xs text-slate-700 hover:bg-slate-200 shadow-sm transition">
+                <i class="fa-solid fa-diagram-project mr-2 text-theme-primary"></i> Buka Bagan Diagram
+            </a>
+            @endif
         </div>
     </div>
 </section>
