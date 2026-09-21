@@ -100,24 +100,7 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var quill = new Quill('#editor', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['link', 'blockquote', 'code-block'],
-                    ['clean']
-                ]
-            }
-        });
-
-        var form = document.getElementById('postForm');
-        form.onsubmit = function() {
-            var contentInput = document.getElementById('contentInput');
-            contentInput.value = quill.root.innerHTML;
-        };
+        initQuillEditor('#editor', '#contentInput', '#postForm');
     });
 </script>
 @endpush

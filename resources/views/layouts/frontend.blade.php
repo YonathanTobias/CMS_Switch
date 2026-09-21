@@ -13,47 +13,23 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '{{ get_setting("theme_primary_color", "#0e7490") }}',
-                            600: '{{ get_setting("theme_primary_color", "#0e7490") }}',
-                            700: '{{ get_setting("theme_secondary_color", "#0369a1") }}',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="{{ asset('js/frontend.js') }}"></script>
     
     <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
+    <!-- Custom Separated Stylesheet -->
+    <link rel="stylesheet" href="{{ asset('css/frontend.css') }}">
+    
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <!-- Dynamic Theme Color Variables -->
     <style>
         :root {
             --color-primary: {{ get_setting('theme_primary_color', '#0e7490') }};
             --color-secondary: {{ get_setting('theme_secondary_color', '#0369a1') }};
         }
-        .bg-theme-primary { background-color: var(--color-primary); }
-        .text-theme-primary { color: var(--color-primary); }
-        .border-theme-primary { border-color: var(--color-primary); }
-        .hover\:bg-theme-primary:hover { background-color: var(--color-primary); }
-        .hover\:text-theme-primary:hover { color: var(--color-primary); }
-        .bg-theme-secondary { background-color: var(--color-secondary); }
-        .text-theme-secondary { color: var(--color-secondary); }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen">

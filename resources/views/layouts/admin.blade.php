@@ -12,28 +12,14 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            500: '{{ get_setting("theme_primary_color", "#0e7490") }}',
-                            600: '{{ get_setting("theme_primary_color", "#0e7490") }}',
-                            700: '{{ get_setting("theme_secondary_color", "#0369a1") }}',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="{{ asset('js/admin.js') }}"></script>
     
     <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
+    <!-- Custom Separated Admin Stylesheet -->
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -41,13 +27,11 @@
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
+    <!-- Dynamic Theme Color Variables -->
     <style>
         :root {
             --color-primary: {{ get_setting('theme_primary_color', '#0e7490') }};
         }
-        .bg-theme-primary { background-color: var(--color-primary); }
-        .text-theme-primary { color: var(--color-primary); }
-        .border-theme-primary { border-color: var(--color-primary); }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex" x-data="{ sidebarOpen: false }">
