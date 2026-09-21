@@ -23,6 +23,9 @@
         <button @click="activeTab = 'profile'" :class="activeTab === 'profile' ? 'bg-theme-primary text-white shadow' : 'bg-white text-slate-600 hover:bg-slate-50'" class="px-4 py-2 rounded-xl transition flex items-center">
             <i class="fa-solid fa-compass mr-2"></i> Visi, Misi & Tentang
         </button>
+        <button @click="activeTab = 'highlight'" :class="activeTab === 'highlight' ? 'bg-theme-primary text-white shadow' : 'bg-white text-slate-600 hover:bg-slate-50'" class="px-4 py-2 rounded-xl transition flex items-center">
+            <i class="fa-solid fa-star mr-2"></i> Kotak Sorotan Beranda
+        </button>
         <button @click="activeTab = 'contact'" :class="activeTab === 'contact' ? 'bg-theme-primary text-white shadow' : 'bg-white text-slate-600 hover:bg-slate-50'" class="px-4 py-2 rounded-xl transition flex items-center">
             <i class="fa-solid fa-location-dot mr-2"></i> Kontak & Peta
         </button>
@@ -50,9 +53,14 @@
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between space-y-4 hover:shadow-md transition">
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase text-white" style="background-color: {{ $preset['color'] }};">
-                            {{ $preset['badge'] }}
-                        </span>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-xl flex items-center justify-center text-white text-sm shadow-sm" style="background-color: {{ $preset['color'] }};">
+                                <i class="{{ $preset['icon'] ?? 'fa-solid fa-hospital-user' }}"></i>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase text-white" style="background-color: {{ $preset['color'] }};">
+                                {{ $preset['badge'] }}
+                            </span>
+                        </div>
                         <div class="w-6 h-6 rounded-full border-2 border-slate-200" style="background-color: {{ $preset['color'] }};" title="Warna Tema"></div>
                     </div>
 
@@ -273,6 +281,90 @@
             <div class="pt-4 border-t">
                 <button type="submit" class="px-6 py-2.5 rounded-xl bg-theme-primary text-white font-bold text-xs uppercase tracking-wider shadow hover:opacity-90 transition">
                     Simpan Visi Misi
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB: KOTAK SOROTAN BERANDA (HIGHLIGHT BOX) -->
+        <div x-show="activeTab === 'highlight'" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6" style="display: none;">
+            <div class="border-b pb-3">
+                <h3 class="text-base font-bold text-slate-900">Kotak Sorotan Beranda (Highlight Box)</h3>
+                <p class="text-xs text-slate-500 mt-1">Sesuaikan judul, deskripsi, 4 poin keunggulan, ikon, dan tombol pada kartu sorotan beranda di samping profil singkat.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="space-y-1 sm:col-span-2">
+                    <label class="text-xs font-bold text-slate-700">Judul Kotak Sorotan</label>
+                    <input type="text" name="info_box_title" value="{{ old('info_box_title', $settings['info_box_title'] ?? (get_setting('enable_services', '1') !== '0' ? 'Layanan Terpadu & Mudah Diakses' : 'Pusat Informasi & Komunikasi')) }}" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white" placeholder="Contoh: Pusat Informasi & Komunikasi">
+                </div>
+
+                <div class="space-y-1 sm:col-span-2">
+                    <label class="text-xs font-bold text-slate-700">Deskripsi Singkat</label>
+                    <textarea name="info_box_description" rows="3" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white" placeholder="Keterangan singkat mengenai layanan atau pusat informasi...">{{ old('info_box_description', $settings['info_box_description'] ?? 'Akses berita terkini, pengumuman resmi, agenda kegiatan akademik, dan unduhan dokumen terpadu di ' . get_setting('division_short_name', 'Divisi') . '.') }}</textarea>
+                </div>
+
+                <div class="space-y-1 sm:col-span-2">
+                    <label class="text-xs font-bold text-slate-700">Ikon FontAwesome Kotak Sorotan</label>
+                    <input type="text" name="info_box_icon" value="{{ old('info_box_icon', $settings['info_box_icon'] ?? 'fa-solid fa-circle-info') }}" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white" placeholder="Contoh: fa-solid fa-circle-info atau fa-solid fa-hand-holding-medical">
+                </div>
+            </div>
+
+            <!-- 4 Poin Keunggulan / Checklist -->
+            <div class="space-y-4 pt-4 border-t">
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">4 Poin Checklist Keunggulan</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700">Poin 1</label>
+                        <input type="text" name="info_box_point_1" value="{{ old('info_box_point_1', $settings['info_box_point_1'] ?? (get_setting('enable_services', '1') !== '0' ? 'Alur Prosedur Jelas' : 'Informasi Resmi Terkini')) }}" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-200">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700">Poin 2</label>
+                        <input type="text" name="info_box_point_2" value="{{ old('info_box_point_2', $settings['info_box_point_2'] ?? (get_setting('enable_services', '1') !== '0' ? 'Formulir Siap Download' : 'Unduhan Dokumen & Formulir')) }}" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-200">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700">Poin 3</label>
+                        <input type="text" name="info_box_point_3" value="{{ old('info_box_point_3', $settings['info_box_point_3'] ?? (get_setting('enable_services', '1') !== '0' ? 'Bantuan & Konsultasi Ramah' : 'Agenda & Kegiatan Aktif')) }}" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-200">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-700">Poin 4</label>
+                        <input type="text" name="info_box_point_4" value="{{ old('info_box_point_4', $settings['info_box_point_4'] ?? (get_setting('enable_services', '1') !== '0' ? 'Pelayanan Cepat & Akurat' : 'Layanan Kontak Responsif')) }}" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-200">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="space-y-4 pt-4 border-t">
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Tombol Aksi Kotak Sorotan</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <span class="text-xs font-bold text-slate-800 block">Tombol Utama (Kiri)</span>
+                        <div class="space-y-1">
+                            <label class="text-[11px] text-slate-600">Teks Tombol 1</label>
+                            <input type="text" name="info_box_btn1_text" value="{{ old('info_box_btn1_text', $settings['info_box_btn1_text'] ?? (get_setting('enable_services', '1') !== '0' ? 'Buka Daftar Layanan' : 'Profil Lengkap')) }}" class="w-full px-3 py-2 rounded-lg text-xs bg-white border border-slate-200">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[11px] text-slate-600">Tautan Tombol 1 (URL)</label>
+                            <input type="text" name="info_box_btn1_link" value="{{ old('info_box_btn1_link', $settings['info_box_btn1_link'] ?? (get_setting('enable_services', '1') !== '0' ? '/layanan' : '/profil')) }}" class="w-full px-3 py-2 rounded-lg text-xs bg-white border border-slate-200">
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <span class="text-xs font-bold text-slate-800 block">Tombol Kedua (Kanan)</span>
+                        <div class="space-y-1">
+                            <label class="text-[11px] text-slate-600">Teks Tombol 2</label>
+                            <input type="text" name="info_box_btn2_text" value="{{ old('info_box_btn2_text', $settings['info_box_btn2_text'] ?? 'Hubungi Kami') }}" class="w-full px-3 py-2 rounded-lg text-xs bg-white border border-slate-200">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[11px] text-slate-600">Tautan Tombol 2 (URL)</label>
+                            <input type="text" name="info_box_btn2_link" value="{{ old('info_box_btn2_link', $settings['info_box_btn2_link'] ?? '/kontak') }}" class="w-full px-3 py-2 rounded-lg text-xs bg-white border border-slate-200">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t">
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-theme-primary text-white font-bold text-xs uppercase tracking-wider shadow hover:opacity-90 transition">
+                    Simpan Kotak Sorotan
                 </button>
             </div>
         </div>

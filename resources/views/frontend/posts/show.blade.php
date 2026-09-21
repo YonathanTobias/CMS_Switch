@@ -43,7 +43,7 @@
             <!-- Featured Image -->
             @if($post->thumbnail)
             <div class="rounded-2xl overflow-hidden shadow-md max-h-[480px]">
-                <img src="{{ $post->thumbnail }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
+                <img src="{{ $post->thumbnail }}" alt="{{ $post->title }}" class="w-full h-full object-cover" decoding="async">
             </div>
             @endif
 

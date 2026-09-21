@@ -105,7 +105,7 @@
 
                     <!-- Chart Image with Lightbox Trigger -->
                     <div class="relative group cursor-pointer rounded-xl overflow-hidden bg-white p-3 border border-slate-200 shadow-sm" @click="lightboxOpen = true">
-                        <img src="{{ $chartImage }}" alt="Bagan Struktur Organisasi {{ get_setting('division_name') }}" class="w-full max-h-[600px] object-contain mx-auto transition duration-300 group-hover:scale-[1.01]">
+                        <img src="{{ $chartImage }}" alt="Bagan Struktur Organisasi {{ get_setting('division_name') }}" class="w-full max-h-[600px] object-contain mx-auto transition duration-300 group-hover:scale-[1.01]" loading="lazy" decoding="async">
                         <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white font-bold text-xs gap-2 backdrop-blur-[2px]">
                             <i class="fa-solid fa-magnifying-glass-plus text-lg"></i> Klik untuk Melihat Ukuran Penuh
                         </div>
@@ -129,7 +129,7 @@
                     <div class="bg-slate-50 rounded-2xl p-6 text-center border border-slate-200/80 space-y-3 hover:shadow-md transition">
                         <div class="w-28 h-28 mx-auto rounded-full bg-slate-200 overflow-hidden border-2 border-theme-primary shadow-sm">
                             @if($tm->photo)
-                                <img src="{{ $tm->photo }}" alt="{{ $tm->name }}" class="w-full h-full object-cover">
+                                <img src="{{ $tm->photo }}" alt="{{ $tm->name }}" class="w-full h-full object-cover" loading="lazy" decoding="async">
                             @else
                                 <div class="w-full h-full flex items-center justify-center text-slate-400 bg-slate-100 text-4xl">
                                     <i class="fa-solid fa-user"></i>

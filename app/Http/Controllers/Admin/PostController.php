@@ -55,7 +55,7 @@ class PostController extends Controller
         $validated['published_at'] = $request->filled('published_at') ? $request->published_at : now();
 
         if ($request->hasFile('thumbnail')) {
-            $validated['thumbnail'] = '/storage/' . $request->file('thumbnail')->store('posts', 'public');
+            $validated['thumbnail'] = \App\Services\ImageService::uploadAndOptimize($request->file('thumbnail'), 'posts', 1200, 82);
         }
 
         Post::create($validated);
@@ -91,7 +91,7 @@ class PostController extends Controller
             if ($post->thumbnail && !str_starts_with($post->thumbnail, 'http')) {
                 Storage::disk('public')->delete(str_replace('/storage/', '', $post->thumbnail));
             }
-            $validated['thumbnail'] = '/storage/' . $request->file('thumbnail')->store('posts', 'public');
+            $validated['thumbnail'] = \App\Services\ImageService::uploadAndOptimize($request->file('thumbnail'), 'posts', 1200, 82);
         }
 
         $post->update($validated);

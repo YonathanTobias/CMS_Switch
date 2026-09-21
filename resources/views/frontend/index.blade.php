@@ -24,12 +24,12 @@
          @mouseleave="startAutoplay()">
     
     <!-- Slides Wrapper -->
-    <div class="relative min-h-[480px] sm:min-h-[540px] lg:min-h-[580px] flex items-center">
+    <div class="relative w-full aspect-[16/7] sm:aspect-[21/8] lg:aspect-[24/8] min-h-[280px] sm:min-h-[380px] lg:min-h-[460px] max-h-[580px] flex items-center bg-slate-900">
         @foreach($carousels as $index => $slide)
         <div x-show="activeSlide === {{ $index }}" 
              x-transition:enter="transition ease-out duration-700"
-             x-transition:enter-start="opacity-0 transform scale-105"
-             x-transition:enter-end="opacity-100 transform scale-100"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
              x-transition:leave="transition ease-in duration-500"
              x-transition:leave-start="opacity-100"
              x-transition:leave-end="opacity-0"
@@ -37,42 +37,54 @@
              style="display: {{ $index === 0 ? 'block' : 'none' }};">
             
             <!-- Slide Background Image -->
-            <img src="{{ $slide->image_path }}" alt="{{ $slide->title }}" class="absolute inset-0 w-full h-full object-cover">
+            @if(empty($slide->title) && empty($slide->subtitle) && !empty($slide->button_link))
+            <a href="{{ $slide->button_link }}" class="absolute inset-0 w-full h-full block z-0" title="{{ $slide->title ?? 'Buka tautan banner' }}">
+                <img src="{{ $slide->image_path }}" alt="{{ $slide->title ?? 'Banner Slide' }}" class="w-full h-full object-cover object-center" decoding="async" {{ $index > 0 ? 'loading=lazy' : 'fetchpriority=high' }}>
+            </a>
+            @else
+            <img src="{{ $slide->image_path }}" alt="{{ $slide->title ?? 'Banner Slide' }}" class="absolute inset-0 w-full h-full object-cover object-center z-0" decoding="async" {{ $index > 0 ? 'loading=lazy' : 'fetchpriority=high' }}>
+            @endif
             
-            <!-- Gradient Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-transparent"></div>
-            <div class="absolute inset-0 bg-black/30"></div>
+            <!-- Slide Content Overlay (Rendered whenever title/subtitle/button exists) -->
+            @if(!empty($slide->title) || !empty($slide->subtitle) || (!empty($slide->button_text) && !empty($slide->button_link)))
+            <!-- Gradient Overlay for text readability -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent z-[1]"></div>
+            <div class="absolute inset-0 bg-black/25 z-[1]"></div>
 
-            <!-- Slide Content -->
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center relative z-10 py-20">
-                <div class="max-w-2xl space-y-6">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center relative z-10 py-12 lg:py-20">
+                <div class="max-w-2xl space-y-4 sm:space-y-6">
                     <div class="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase border border-white/30 text-white">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
                         <span>{{ get_setting('parent_institution', 'STIKES Panti Waluya') }}</span>
                     </div>
 
-                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-white drop-shadow-md">
+                    @if($slide->title)
+                    <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-white drop-shadow-md">
                         {{ $slide->title }}
                     </h1>
+                    @endif
 
                     @if($slide->subtitle)
-                    <p class="text-base sm:text-lg text-slate-100 max-w-xl leading-relaxed drop-shadow">
+                    <p class="text-sm sm:text-base lg:text-lg text-slate-100 max-w-xl leading-relaxed drop-shadow">
                         {{ $slide->subtitle }}
                     </p>
                     @endif
 
-                    <div class="flex flex-wrap gap-4 pt-2">
+                    <div class="flex flex-wrap gap-3 sm:gap-4 pt-2">
                         @if($slide->button_text && $slide->button_link)
-                        <a href="{{ $slide->button_link }}" class="px-6 py-3 rounded-xl bg-theme-primary text-white font-bold text-sm shadow-xl hover:opacity-90 transition flex items-center transform hover:-translate-y-0.5">
+                        <a href="{{ $slide->button_link }}" class="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-theme-primary text-white font-bold text-xs sm:text-sm shadow-xl hover:opacity-90 transition flex items-center transform hover:-translate-y-0.5">
                             {{ $slide->button_text }} <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
                         </a>
                         @endif
-                        <a href="{{ route('services') }}" class="px-6 py-3 rounded-xl bg-white/15 backdrop-blur-md text-white font-semibold text-sm border border-white/30 hover:bg-white/25 transition flex items-center">
+                        @if(get_setting('enable_services', '1') !== '0')
+                        <a href="{{ route('services') }}" class="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-white/15 backdrop-blur-md text-white font-semibold text-xs sm:text-sm border border-white/30 hover:bg-white/25 transition flex items-center">
                             <i class="fa-solid fa-list-check mr-2"></i> Layanan Divisi
                         </a>
+                        @endif
                     </div>
                 </div>
             </div>
+            @endif
         </div>
         @endforeach
     </div>
@@ -337,84 +349,48 @@
                 </div>
             </div>
 
-            <!-- Right Box: Services or Info Highlight Banner -->
+            <!-- Right Box: Dynamic Info / Service Highlight Card -->
             <div class="lg:col-span-6">
-                @if(get_setting('enable_services', '1') !== '0')
                 <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
-                    <div class="absolute -top-10 -right-10 w-48 h-48 bg-sky-500/20 rounded-full blur-2xl"></div>
+                    <div class="absolute -top-10 -right-10 w-48 h-48 bg-sky-500/20 rounded-full blur-2xl pointer-events-none"></div>
                     <div class="relative z-10 space-y-6">
                         <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-xl text-sky-400">
-                            <i class="fa-solid fa-hand-holding-medical"></i>
+                            <i class="{{ get_setting('info_box_icon', (get_setting('enable_services', '1') !== '0' ? 'fa-solid fa-hand-holding-medical' : 'fa-solid fa-circle-info')) }}"></i>
                         </div>
-                        <h3 class="text-xl font-bold">Layanan Terpadu & Mudah Diakses</h3>
+                        <h3 class="text-xl font-bold">
+                            {{ get_setting('info_box_title', (get_setting('enable_services', '1') !== '0' ? 'Layanan Terpadu & Mudah Diakses' : 'Pusat Informasi & Komunikasi')) }}
+                        </h3>
                         <p class="text-xs text-slate-300 leading-relaxed">
-                            Kami menyediakan alur prosedur, panduan teknis, pengurusan administrasi, dan konsultasi online bagi mahasiswa, dosen, serta mitra kesehatan.
+                            {{ get_setting('info_box_description', (get_setting('enable_services', '1') !== '0' ? 'Kami menyediakan alur prosedur, panduan teknis, pengurusan administrasi, dan konsultasi online bagi mahasiswa, dosen, serta mitra kesehatan.' : 'Akses berita terkini, pengumuman resmi, agenda kegiatan akademik, dan unduhan dokumen terpadu di ' . get_setting('division_short_name', 'Divisi') . '.')) }}
                         </p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                             <div class="flex items-center space-x-2 text-xs text-slate-200">
                                 <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Alur Prosedur Jelas</span>
+                                <span>{{ get_setting('info_box_point_1', (get_setting('enable_services', '1') !== '0' ? 'Alur Prosedur Jelas' : 'Informasi Resmi Terkini')) }}</span>
                             </div>
                             <div class="flex items-center space-x-2 text-xs text-slate-200">
                                 <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Formulir Siap Download</span>
+                                <span>{{ get_setting('info_box_point_2', (get_setting('enable_services', '1') !== '0' ? 'Formulir Siap Download' : 'Unduhan Dokumen & Formulir')) }}</span>
                             </div>
                             <div class="flex items-center space-x-2 text-xs text-slate-200">
                                 <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Bantuan & Konsultasi Ramah</span>
+                                <span>{{ get_setting('info_box_point_3', (get_setting('enable_services', '1') !== '0' ? 'Bantuan & Konsultasi Ramah' : 'Agenda & Kegiatan Aktif')) }}</span>
                             </div>
                             <div class="flex items-center space-x-2 text-xs text-slate-200">
                                 <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Pelayanan Cepat & Akurat</span>
+                                <span>{{ get_setting('info_box_point_4', (get_setting('enable_services', '1') !== '0' ? 'Pelayanan Cepat & Akurat' : 'Layanan Kontak Responsif')) }}</span>
                             </div>
                         </div>
-                        <div class="pt-4">
-                            <a href="{{ route('services') }}" class="px-5 py-2.5 rounded-xl bg-theme-primary text-white text-xs font-bold uppercase tracking-wider inline-flex items-center shadow hover:opacity-90 transition">
-                                Buka Daftar Layanan <i class="fa-solid fa-chevron-right ml-2 text-[10px]"></i>
+                        <div class="pt-4 flex flex-wrap gap-3">
+                            <a href="{{ get_setting('info_box_btn1_link', (get_setting('enable_services', '1') !== '0' ? route('services') : route('profile'))) }}" class="px-5 py-2.5 rounded-xl bg-theme-primary text-white text-xs font-bold uppercase tracking-wider inline-flex items-center shadow hover:opacity-90 transition">
+                                {{ get_setting('info_box_btn1_text', (get_setting('enable_services', '1') !== '0' ? 'Buka Daftar Layanan' : 'Profil Lengkap')) }} <i class="fa-solid fa-chevron-right ml-2 text-[10px]"></i>
+                            </a>
+                            <a href="{{ get_setting('info_box_btn2_link', route('contact')) }}" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold uppercase tracking-wider inline-flex items-center transition border border-white/20">
+                                {{ get_setting('info_box_btn2_text', 'Hubungi Kami') }}
                             </a>
                         </div>
                     </div>
                 </div>
-                @else
-                <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
-                    <div class="absolute -top-10 -right-10 w-48 h-48 bg-sky-500/20 rounded-full blur-2xl"></div>
-                    <div class="relative z-10 space-y-6">
-                        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-xl text-sky-400">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </div>
-                        <h3 class="text-xl font-bold">Pusat Informasi & Komunikasi</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Akses berita terkini, pengumuman resmi, agenda kegiatan akademik, dan unduhan dokumen terpadu di {{ get_setting('division_short_name') }}.
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                            <div class="flex items-center space-x-2 text-xs text-slate-200">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Informasi Resmi Terkini</span>
-                            </div>
-                            <div class="flex items-center space-x-2 text-xs text-slate-200">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Unduhan Dokumen & Formulir</span>
-                            </div>
-                            <div class="flex items-center space-x-2 text-xs text-slate-200">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Agenda & Kegiatan Aktif</span>
-                            </div>
-                            <div class="flex items-center space-x-2 text-xs text-slate-200">
-                                <i class="fa-solid fa-check text-emerald-400"></i>
-                                <span>Layanan Kontak Responsif</span>
-                            </div>
-                        </div>
-                        <div class="pt-4 flex gap-3">
-                            <a href="{{ route('profile') }}" class="px-5 py-2.5 rounded-xl bg-theme-primary text-white text-xs font-bold uppercase tracking-wider inline-flex items-center shadow hover:opacity-90 transition">
-                                Profil Lengkap <i class="fa-solid fa-chevron-right ml-2 text-[10px]"></i>
-                            </a>
-                            <a href="{{ route('contact') }}" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold uppercase tracking-wider inline-flex items-center transition border border-white/20">
-                                Hubungi Kami
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                @endif
             </div>
         </div>
     </div>
@@ -491,7 +467,7 @@
                     <!-- Post Thumbnail -->
                     <div class="relative h-48 bg-slate-100 overflow-hidden">
                         @if($post->thumbnail)
-                            <img src="{{ $post->thumbnail }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <img src="{{ $post->thumbnail }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" decoding="async">
                         @else
                             <div class="w-full h-full flex items-center justify-center text-slate-300" style="background: linear-gradient(135deg, #0f172a, var(--color-primary));">
                                 <i class="fa-solid fa-newspaper text-4xl text-white/30"></i>
@@ -651,7 +627,7 @@
             <div class="bg-slate-50 rounded-2xl p-6 text-center border border-slate-200/80 hover:shadow-md transition space-y-3">
                 <div class="w-24 h-24 mx-auto rounded-full bg-slate-200 overflow-hidden border-2 border-theme-primary shadow-sm">
                     @if($tm->photo)
-                        <img src="{{ $tm->photo }}" alt="{{ $tm->name }}" class="w-full h-full object-cover">
+                        <img src="{{ $tm->photo }}" alt="{{ $tm->name }}" class="w-full h-full object-cover" loading="lazy" decoding="async">
                     @else
                         <div class="w-full h-full flex items-center justify-center text-slate-400 bg-slate-100 text-3xl">
                             <i class="fa-solid fa-user"></i>

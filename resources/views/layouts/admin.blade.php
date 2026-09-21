@@ -45,7 +45,11 @@
         <div class="h-20 flex items-center px-6 border-b border-slate-800 bg-slate-950/40">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg" style="background-color: var(--color-primary);">
-                    <i class="fa-solid fa-hospital-user"></i>
+                    @if(get_setting('logo_url'))
+                        <img src="{{ get_setting('logo_url') }}" alt="Logo" class="w-8 h-8 object-contain">
+                    @else
+                        <i class="{{ get_setting('division_icon', 'fa-solid fa-hospital-user') }}"></i>
+                    @endif
                 </div>
                 <div class="overflow-hidden">
                     <div class="text-xs uppercase tracking-wider font-bold text-sky-400">Panel CMS Divisi</div>

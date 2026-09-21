@@ -23,8 +23,9 @@ class CarouselController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:500',
+            'show_overlay' => 'nullable|boolean',
             'image' => 'required|image|max:5120',
             'button_text' => 'nullable|string|max:100',
             'button_link' => 'nullable|string|max:255',
@@ -32,8 +33,11 @@ class CarouselController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $path = $request->file('image')->store('carousels', 'public');
-        $validated['image_path'] = '/storage/' . $path;
+        $validated['show_overlay'] = $request->has('show_overlay') 
+            ? $request->boolean('show_overlay') 
+            : (!empty($request->input('title')) || !empty($request->input('subtitle')));
+            
+        $validated['image_path'] = \App\Services\ImageService::uploadAndOptimize($request->file('image'), 'carousels', 1920, 85);
         $validated['is_active'] = $request->has('is_active');
         $validated['order_index'] = $request->input('order_index', 0);
 
@@ -50,8 +54,9 @@ class CarouselController extends Controller
     public function update(Request $request, Carousel $carousel)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:500',
+            'show_overlay' => 'nullable|boolean',
             'image' => 'nullable|image|max:5120',
             'button_text' => 'nullable|string|max:100',
             'button_link' => 'nullable|string|max:255',
@@ -59,6 +64,10 @@ class CarouselController extends Controller
             'is_active' => 'boolean',
         ]);
 
+        $validated['show_overlay'] = $request->has('show_overlay') 
+            ? $request->boolean('show_overlay') 
+            : (!empty($request->input('title')) || !empty($request->input('subtitle')));
+            
         $validated['is_active'] = $request->has('is_active');
         $validated['order_index'] = $request->input('order_index', 0);
 
@@ -66,8 +75,7 @@ class CarouselController extends Controller
             if ($carousel->image_path && !str_starts_with($carousel->image_path, 'http')) {
                 Storage::disk('public')->delete(str_replace('/storage/', '', $carousel->image_path));
             }
-            $path = $request->file('image')->store('carousels', 'public');
-            $validated['image_path'] = '/storage/' . $path;
+            $validated['image_path'] = \App\Services\ImageService::uploadAndOptimize($request->file('image'), 'carousels', 1920, 85);
         }
 
         $carousel->update($validated);

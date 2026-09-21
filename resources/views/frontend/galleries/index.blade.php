@@ -19,7 +19,7 @@
         @forelse($galleries as $gal)
         <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition border border-slate-200 group">
             <div class="relative h-48 bg-slate-100 overflow-hidden">
-                <img src="{{ $gal->image_path }}" alt="{{ $gal->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                <img src="{{ $gal->image_path }}" alt="{{ $gal->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" decoding="async">
                 <div class="absolute top-2 right-2">
                     <span class="px-2 py-0.5 rounded-md bg-slate-900/80 text-white text-[10px] font-semibold backdrop-blur-sm">
                         {{ $gal->category }}

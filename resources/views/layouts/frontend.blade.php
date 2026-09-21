@@ -70,7 +70,7 @@
                         @if(get_setting('logo_url'))
                             <img src="{{ get_setting('logo_url') }}" alt="Logo" class="w-10 h-10 object-contain">
                         @else
-                            <i class="fa-solid fa-notes-medical text-2xl"></i>
+                            <i class="{{ get_setting('division_icon', 'fa-solid fa-hospital-user') }} text-2xl"></i>
                         @endif
                     </div>
                     <div>
@@ -216,7 +216,11 @@
                 <div class="space-y-4">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold" style="background-color: var(--color-primary);">
-                            <i class="fa-solid fa-hospital text-lg"></i>
+                            @if(get_setting('logo_url'))
+                                <img src="{{ get_setting('logo_url') }}" alt="Logo" class="w-8 h-8 object-contain">
+                            @else
+                                <i class="{{ get_setting('division_icon', 'fa-solid fa-hospital-user') }} text-lg"></i>
+                            @endif
                         </div>
                         <div>
                             <div class="font-bold text-white leading-snug">{{ get_setting('division_short_name', 'Divisi STIKES') }}</div>

@@ -27,15 +27,15 @@ class SettingController extends Controller
     {
         $data = $request->except(['_token', 'logo', 'hero_image']);
 
-        // Handle file uploads (Logo & Hero Image)
+        // Handle file uploads (Logo & Hero Image) with Auto-Compression
         if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('branding', 'public');
-            Setting::set('logo_url', '/storage/' . $logoPath);
+            $logoPath = \App\Services\ImageService::uploadAndOptimize($request->file('logo'), 'branding', 600, 90);
+            Setting::set('logo_url', $logoPath);
         }
 
         if ($request->hasFile('hero_image')) {
-            $heroPath = $request->file('hero_image')->store('branding', 'public');
-            Setting::set('hero_image_url', '/storage/' . $heroPath);
+            $heroPath = \App\Services\ImageService::uploadAndOptimize($request->file('hero_image'), 'branding', 1920, 85);
+            Setting::set('hero_image_url', $heroPath);
         }
 
         // Save all text settings
@@ -81,12 +81,14 @@ class SettingController extends Controller
                 'name' => 'Lembaga Penjaminan Mutu Internal (LPMI)',
                 'badge' => 'Mutu & SPMI',
                 'color' => '#0f766e',
+                'icon' => 'fa-solid fa-award',
                 'description' => 'Preset untuk Lembaga Penjaminan Mutu Internal (LPMI) STIKES Panti Waluya.',
                 'settings' => [
                     'division_type' => 'lembaga',
                     'division_name' => 'Lembaga Penjaminan Mutu Internal (LPMI)',
                     'division_short_name' => 'LPMI STIKES Panti Waluya',
                     'division_acronym' => 'LPMI',
+                    'division_icon' => 'fa-solid fa-award',
                     'division_tagline' => 'Mengawal Mutu Pendidikan Tinggi Kesehatan Menuju Akreditasi Unggul',
                     'theme_primary_color' => '#0f766e', // Teal 700
                     'theme_secondary_color' => '#115e59',
@@ -113,12 +115,14 @@ class SettingController extends Controller
                 'name' => 'Lembaga Penelitian dan Pengabdian kepada Masyarakat (LPPM)',
                 'badge' => 'Riset & Pengmas',
                 'color' => '#0e7490',
+                'icon' => 'fa-solid fa-microscope',
                 'description' => 'Preset untuk Lembaga Penelitian dan Pengabdian kepada Masyarakat STIKES Panti Waluya.',
                 'settings' => [
                     'division_type' => 'lembaga',
                     'division_name' => 'Lembaga Penelitian dan Pengabdian kepada Masyarakat (LPPM)',
                     'division_short_name' => 'LPPM STIKES Panti Waluya',
                     'division_acronym' => 'LPPM',
+                    'division_icon' => 'fa-solid fa-microscope',
                     'division_tagline' => 'Mendorong Riset Klinis Kesehatan & Pengabdian Masyarakat Berkarakter Kasih',
                     'theme_primary_color' => '#0e7490', // Cyan 700
                     'theme_secondary_color' => '#0369a1',
@@ -145,12 +149,14 @@ class SettingController extends Controller
                 'name' => 'Career Development Center (CDC)',
                 'badge' => 'Pusat Karir',
                 'color' => '#ea580c',
+                'icon' => 'fa-solid fa-briefcase',
                 'description' => 'Preset untuk Career Development Center & Pusat Karir Alumni.',
                 'settings' => [
                     'division_type' => 'unit',
                     'division_name' => 'Career Development Center & Pusat Karir Alumni (CDC)',
                     'division_short_name' => 'CDC STIKES Panti Waluya',
                     'division_acronym' => 'CDC',
+                    'division_icon' => 'fa-solid fa-briefcase',
                     'division_tagline' => 'Jembatan Emas Menuju Karir Tenaga Kesehatan Profesional & Global',
                     'theme_primary_color' => '#ea580c', // Orange 600
                     'theme_secondary_color' => '#c2410c',
@@ -177,12 +183,14 @@ class SettingController extends Controller
                 'name' => 'Belmawa / Kemahasiswaan',
                 'badge' => 'Kemahasiswaan',
                 'color' => '#1d4ed8',
+                'icon' => 'fa-solid fa-graduation-cap',
                 'description' => 'Preset untuk Biro Pembelajaran & Kemahasiswaan (Belmawa).',
                 'settings' => [
                     'division_type' => 'biro',
                     'division_name' => 'Biro Pembelajaran & Kemahasiswaan (Belmawa)',
                     'division_short_name' => 'Belmawa STIKES Panti Waluya',
                     'division_acronym' => 'BELMAWA',
+                    'division_icon' => 'fa-solid fa-graduation-cap',
                     'division_tagline' => 'Wadah Pengembangan Prestasi, Karakter Kasih, dan Kreativitas Mahasiswa',
                     'theme_primary_color' => '#1d4ed8', // Blue 700
                     'theme_secondary_color' => '#1e40af',
@@ -209,12 +217,14 @@ class SettingController extends Controller
                 'name' => 'PRODI S1 Keperawatan & Profesi Ners',
                 'badge' => 'Program Studi',
                 'color' => '#ca8a04',
+                'icon' => 'fa-solid fa-user-nurse',
                 'description' => 'Preset untuk Program Studi S1 Keperawatan dan Pendidikan Profesi Ners (1 Web Terpadu).',
                 'settings' => [
                     'division_type' => 'prodi',
                     'division_name' => 'Program Studi S1 Keperawatan & Pendidikan Profesi Ners',
                     'division_short_name' => 'Prodi Keperawatan & Ners Panti Waluya',
                     'division_acronym' => 'KEP-NERS',
+                    'division_icon' => 'fa-solid fa-user-nurse',
                     'division_tagline' => 'Mencetak Perawat Profesional Beretika, Unggul dalam Asuhan Geriatri & Gawat Darurat',
                     'theme_primary_color' => '#ca8a04', // Golden Yellow
                     'theme_secondary_color' => '#a16207',
@@ -244,12 +254,14 @@ class SettingController extends Controller
                 'name' => 'Prodi S1 Farmasi',
                 'badge' => 'Program Studi',
                 'color' => '#7c2d12',
+                'icon' => 'fa-solid fa-prescription-bottle-medical',
                 'description' => 'Preset untuk Program Studi S1 Farmasi.',
                 'settings' => [
                     'division_type' => 'prodi',
                     'division_name' => 'Program Studi S1 Farmasi',
                     'division_short_name' => 'Prodi S1 Farmasi Panti Waluya',
                     'division_acronym' => 'FARMASI',
+                    'division_icon' => 'fa-solid fa-prescription-bottle-medical',
                     'division_tagline' => 'Unggul dalam Riset Farmasi Bahan Alam, Formulasi Herbal, dan Farmasi Klinis-Komunitas',
                     'theme_primary_color' => '#7c2d12', // Warm Orange/Brown
                     'theme_secondary_color' => '#9a3412',
@@ -278,16 +290,18 @@ class SettingController extends Controller
             'mik' => [
                 'name' => 'Prodi D4 Manajemen Informasi Kesehatan',
                 'badge' => 'Program Studi',
-                'color' => '#4338ca',
+                'color' => '#7c3aed',
+                'icon' => 'fa-solid fa-laptop-medical',
                 'description' => 'Preset untuk Program Studi Sarjana Terapan Manajemen Informasi Kesehatan (D4 MIK).',
                 'settings' => [
                     'division_type' => 'prodi',
                     'division_name' => 'Program Studi Sarjana Terapan Manajemen Informasi Kesehatan (D4 MIK)',
                     'division_short_name' => 'Prodi D4 MIK Panti Waluya',
                     'division_acronym' => 'D4-MIK',
+                    'division_icon' => 'fa-solid fa-laptop-medical',
                     'division_tagline' => 'Pelopor Transformasi Rekam Medis Elektronik (RME) & Analitika Data Kesehatan Digital',
-                    'theme_primary_color' => '#4338ca', // Indigo 700
-                    'theme_secondary_color' => '#3730a3',
+                    'theme_primary_color' => '#7c3aed', // Purple / Ungu
+                    'theme_secondary_color' => '#5b21b6', // Deep Purple
                     'hero_banner_title' => 'Pusat Unggulan Rekam Medis Digital & Health Informatics',
                     'hero_banner_subtitle' => 'Mencetak Sarjana Terapan MIK yang ahli dalam koding klinis (ICD-10/ICD-9-CM), SIMRS, audit rekam medis, dan keamanan data kesehatan.',
                     'about_title' => 'Profil Program Studi D4 Manajemen Informasi Kesehatan',
@@ -314,12 +328,14 @@ class SettingController extends Controller
                 'name' => 'Rekognisi Pembelajaran Lampau (RPL)',
                 'badge' => 'Pusat Layanan',
                 'color' => '#b91c1c',
+                'icon' => 'fa-solid fa-id-card-clip',
                 'description' => 'Preset untuk Pusat Layanan Rekognisi Pembelajaran Lampau (RPL Tipe A).',
                 'settings' => [
                     'division_type' => 'unit',
                     'division_name' => 'Pusat Layanan Rekognisi Pembelajaran Lampau (RPL)',
                     'division_short_name' => 'Pusat RPL STIKES Panti Waluya',
                     'division_acronym' => 'RPL',
+                    'division_icon' => 'fa-solid fa-id-card-clip',
                     'division_tagline' => 'Konversi Pengalaman Kerja & Pendidikan Non-Formal Menjadi SKS Gelar Sarjana Kesehatan',
                     'theme_primary_color' => '#b91c1c', // Red 700
                     'theme_secondary_color' => '#991b1b',
@@ -340,6 +356,74 @@ class SettingController extends Controller
                     'stat_3_label' => 'Resmi Kemendikbudristek',
                     'stat_4_number' => '15',
                     'stat_4_label' => 'Asesor RPL Tersertifikasi',
+                ],
+            ],
+            'perpustakaan' => [
+                'name' => 'Unit Perpustakaan Terpadu',
+                'badge' => 'Perpustakaan',
+                'color' => '#0891b2',
+                'icon' => 'fa-solid fa-book-open-reader',
+                'description' => 'Preset untuk Unit Pelaksana Teknis (UPT) Perpustakaan & E-Library.',
+                'settings' => [
+                    'division_type' => 'unit',
+                    'division_name' => 'Unit Perpustakaan & E-Library Terpadu',
+                    'division_short_name' => 'Perpustakaan STIKES Panti Waluya',
+                    'division_acronym' => 'PERPUS',
+                    'division_icon' => 'fa-solid fa-book-open-reader',
+                    'division_tagline' => 'Jendela Referensi Ilmiah Kesehatan Digital & Sumber Belajar Modern',
+                    'theme_primary_color' => '#0891b2',
+                    'theme_secondary_color' => '#0e7490',
+                    'hero_banner_title' => 'Pusat Sumber Belajar & Koleksi Jurnal Kesehatan',
+                    'hero_banner_subtitle' => 'Menyediakan ribuan buku teks medis, e-journal nasional/internasional, repositori skripsi, dan ruang baca nyaman.',
+                    'about_title' => 'Tentang Perpustakaan STIKES Panti Waluya',
+                    'about_description' => 'UPT Perpustakaan melayani peminjaman buku, akses database e-journal kesehatan, bimbingan literasi informasi ilmiah, cek similarity Turnitin, dan repository karya ilmiah.',
+                    'vision' => 'Menjadi pusat rujukan informasi ilmiah kesehatan yang modern, terdigitalisasi, dan berorientasi pada kepuasan sivitas akademika.',
+                    'mission' => "1. Menyediakan koleksi pustaka cetak dan digital bidang keperawatan, farmasi, dan rekam medis yang mutakhir.\n2. Mengembangkan sistem automasi perpustakaan (SLiMS) dan repositori institusi terintegrasi.\n3. Memberikan layanan penelusuran referensi dan uji kesamaan karya ilmiah (Turnitin).\n4. Menciptakan suasana ruang belajar yang inklusif, tenang, dan inspiratif.",
+                    'contact_email' => 'perpustakaan@pantiwaluya.ac.id',
+                    'contact_phone' => '(0341) 569275 ext. 108',
+                    'contact_room' => 'Gedung Perpustakaan Pusat Lt. 1 & 2',
+                    'stat_1_number' => '12.000+',
+                    'stat_1_label' => 'Judul Koleksi Buku',
+                    'stat_2_number' => '8.500+',
+                    'stat_2_label' => 'E-Journal Terlanggan',
+                    'stat_3_number' => '100%',
+                    'stat_3_label' => 'Katalog Online (OPAC)',
+                    'stat_4_number' => '150',
+                    'stat_4_label' => 'Kapasitas Ruang Baca',
+                ],
+            ],
+            'it_puskom' => [
+                'name' => 'Pusat Komputer & Sistem Informasi (Puskom / IT)',
+                'badge' => 'Pusat TI',
+                'color' => '#2563eb',
+                'icon' => 'fa-solid fa-server',
+                'description' => 'Preset untuk Unit Pengelola Sistem Informasi, Jaringan & Layanan IT Kampus.',
+                'settings' => [
+                    'division_type' => 'unit',
+                    'division_name' => 'Pusat Komputer & Sistem Informasi (Puskom / IT)',
+                    'division_short_name' => 'Puskom STIKES Panti Waluya',
+                    'division_acronym' => 'PUSKOM-IT',
+                    'division_icon' => 'fa-solid fa-server',
+                    'division_tagline' => 'Membangun Infrastruktur Digital, Keamanan Siber & Layanan TI Kampus Terpadu',
+                    'theme_primary_color' => '#2563eb',
+                    'theme_secondary_color' => '#1d4ed8',
+                    'hero_banner_title' => 'Layanan Infrastruktur TI & Smart Campus',
+                    'hero_banner_subtitle' => 'Mengelola sistem akademik (SIAKAD), e-learning LMS, jaringan internet fiber optic kampus, dan keamanan server.',
+                    'about_title' => 'Tentang Pusat Komputer & Sistem Informasi',
+                    'about_description' => 'Puskom IT bertanggung jawab atas pemeliharaan server, integrasi aplikasi portal kampus, akun email institusi, hotspot Wi-Fi, dan helpdesk teknis sivitas akademika.',
+                    'vision' => 'Menjadi motor penggerak transformasi digital kampus yang andal, aman, dan berkesinambungan.',
+                    'mission' => "1. Membangun dan memelihara sistem informasi akademik dan manajemen kampus yang terintegrasi.\n2. Menjamin ketersediaan infrastruktur jaringan internet berkecepatan tinggi dan keamanan data.\n3. Memberikan layanan helpdesk dan dukungan teknis yang responsif bagi dosen, mahasiswa, dan staf.\n4. Mengembangkan platform digital modern untuk mendukung akreditasi dan tata kelola perguruan tinggi.",
+                    'contact_email' => 'it@pantiwaluya.ac.id',
+                    'contact_phone' => '(0341) 569275 ext. 101',
+                    'contact_room' => 'Gedung Server & Data Center Lt. 1',
+                    'stat_1_number' => '99.9%',
+                    'stat_1_label' => 'Uptime Server',
+                    'stat_2_number' => '1 Gbps',
+                    'stat_2_label' => 'Bandwidth Internet',
+                    'stat_3_number' => '15+',
+                    'stat_3_label' => 'Sistem Informasi Aktif',
+                    'stat_4_number' => '24/7',
+                    'stat_4_label' => 'Monitoring Server',
                 ],
             ],
         ];

@@ -14,5 +14,18 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn () => route('admin.login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Session\TokenMismatchException $e, $request) {
+            if ($request->is('admin/*') || $request->is('login')) {
+                return redirect()->route('admin.login')->with('error', 'Sesi keamanan (CSRF Token) telah kedaluwarsa. Silakan coba login kembali.');
+            }
+            return back()->with('error', 'Sesi Anda telah kedaluwarsa. Silakan muat ulang halaman.');
+        });
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, $request) {
+            if ($e->getStatusCode() === 419) {
+                if ($request->is('admin/*') || $request->is('login')) {
+                    return redirect()->route('admin.login')->with('error', 'Sesi login telah kedaluwarsa. Silakan coba login kembali.');
+                }
+                return back()->with('error', 'Sesi Anda telah kedaluwarsa. Silakan muat ulang halaman.');
+            }
+        });
     })->create();

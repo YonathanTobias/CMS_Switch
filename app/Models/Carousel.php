@@ -12,6 +12,7 @@ class Carousel extends Model
     protected $fillable = [
         'title',
         'subtitle',
+        'show_overlay',
         'image_path',
         'button_text',
         'button_link',
@@ -21,6 +22,7 @@ class Carousel extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'show_overlay' => 'boolean',
         'order_index' => 'integer',
     ];
 

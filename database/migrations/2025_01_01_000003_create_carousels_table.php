@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('carousels', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->text('subtitle')->nullable();
             $table->string('image_path');
             $table->string('button_text')->nullable();

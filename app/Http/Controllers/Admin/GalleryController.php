@@ -24,8 +24,7 @@ class GalleryController extends Controller
             'caption' => 'nullable|string|max:255',
         ]);
 
-        $path = $request->file('image')->store('gallery', 'public');
-        $validated['image_path'] = '/storage/' . $path;
+        $validated['image_path'] = \App\Services\ImageService::uploadAndOptimize($request->file('image'), 'gallery', 1400, 82);
 
         Gallery::create($validated);
 

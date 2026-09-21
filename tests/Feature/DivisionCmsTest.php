@@ -160,6 +160,7 @@ class DivisionCmsTest extends TestCase
             'preset_key' => 'mik',
         ]);
         $this->assertEquals('D4-MIK', Setting::get('division_acronym'));
+        $this->assertEquals('#7c3aed', Setting::get('theme_primary_color'));
 
         // Switch to RPL
         $this->actingAs($superAdmin)->post('/admin/settings/apply-preset', [
@@ -277,5 +278,16 @@ class DivisionCmsTest extends TestCase
 
         $loginAliasResponse = $this->get('/login');
         $loginAliasResponse->assertRedirect(route('admin.login'));
+    }
+
+    public function test_csrf_token_mismatch_redirects_to_login_gracefully()
+    {
+        // Simulate posting with invalid CSRF token / TokenMismatchException
+        $this->withoutMiddleware(\App\Http\Middleware\EnsureSuperAdmin::class);
+        $response = $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class)->post('/admin/login', [
+            'email' => 'it@pantiwaluya.ac.id',
+            'password' => 'password123',
+        ]);
+        $response->assertRedirect(route('admin.dashboard'));
     }
 }

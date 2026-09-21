@@ -35,7 +35,7 @@ class TeamMemberController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $validated['photo'] = '/storage/' . $request->file('photo')->store('team', 'public');
+            $validated['photo'] = \App\Services\ImageService::uploadAndOptimize($request->file('photo'), 'team', 800, 85);
         }
 
         $validated['order_index'] = $request->input('order_index', 0);
@@ -67,7 +67,7 @@ class TeamMemberController extends Controller
             if ($team->photo && !str_starts_with($team->photo, 'http')) {
                 Storage::disk('public')->delete(str_replace('/storage/', '', $team->photo));
             }
-            $validated['photo'] = '/storage/' . $request->file('photo')->store('team', 'public');
+            $validated['photo'] = \App\Services\ImageService::uploadAndOptimize($request->file('photo'), 'team', 800, 85);
         }
 
         $validated['order_index'] = $request->input('order_index', 0);
@@ -101,7 +101,7 @@ class TeamMemberController extends Controller
             if ($oldChart && !str_starts_with($oldChart, 'http')) {
                 Storage::disk('public')->delete(str_replace('/storage/', '', $oldChart));
             }
-            $chartPath = '/storage/' . $request->file('organization_chart')->store('organization', 'public');
+            $chartPath = \App\Services\ImageService::uploadAndOptimize($request->file('organization_chart'), 'organization', 2000, 88);
             \App\Models\Setting::set('organization_chart_image', $chartPath);
         }
 

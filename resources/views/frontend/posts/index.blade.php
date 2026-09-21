@@ -54,7 +54,7 @@
             <div>
                 <div class="relative h-48 bg-slate-100 overflow-hidden">
                     @if($post->thumbnail)
-                        <img src="{{ $post->thumbnail }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        <img src="{{ $post->thumbnail }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" decoding="async">
                     @else
                         <div class="w-full h-full flex items-center justify-center text-slate-300" style="background: linear-gradient(135deg, #0f172a, var(--color-primary));">
                             <i class="fa-solid fa-newspaper text-4xl text-white/30"></i>

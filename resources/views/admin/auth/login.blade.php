@@ -30,7 +30,11 @@
         <!-- Logo & Header -->
         <div class="text-center space-y-2">
             <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-white text-3xl shadow-xl" style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));">
-                <i class="fa-solid fa-hospital-user"></i>
+                @if(get_setting('logo_url'))
+                    <img src="{{ get_setting('logo_url') }}" alt="Logo" class="w-12 h-12 object-contain">
+                @else
+                    <i class="{{ get_setting('division_icon', 'fa-solid fa-hospital-user') }}"></i>
+                @endif
             </div>
             <h1 class="text-xl font-bold text-white tracking-tight">Panel Administrator CMS</h1>
             <p class="text-xs text-slate-400 font-medium">{{ get_setting('division_name', 'Divisi STIKES Panti Waluya') }}</p>
