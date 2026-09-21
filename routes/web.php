@@ -54,14 +54,15 @@ Route::post('/kontak/kirim', [HomeController::class, 'sendMessage'])->name('cont
 
 /*
 |--------------------------------------------------------------------------
-| Admin Authentication Routes
+| Admin Authentication Routes (Custom Slug: /sugar)
 |--------------------------------------------------------------------------
 */
+Route::get('/sugar', [AuthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/sugar', [AuthController::class, 'login'])->name('admin.login.submit');
 Route::get('/login', fn () => redirect()->route('admin.login'))->name('login');
+Route::get('/admin/login', fn () => redirect()->route('admin.login'));
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     /*
