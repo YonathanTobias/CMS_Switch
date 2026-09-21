@@ -53,9 +53,6 @@
                 @if(get_setting('social_youtube'))
                     <a href="{{ get_setting('social_youtube') }}" target="_blank" class="hover:text-red-400 transition" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
                 @endif
-                <a href="{{ route('admin.login') }}" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded transition border border-slate-700 ml-2">
-                    <i class="fa-solid fa-lock text-[10px] mr-1"></i> Admin CMS
-                </a>
             </div>
         </div>
     </div>
