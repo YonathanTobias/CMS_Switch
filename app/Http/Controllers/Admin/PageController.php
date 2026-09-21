@@ -121,11 +121,22 @@ class PageController extends Controller
 
     public function builder(Page $page)
     {
+        if (get_setting('feature_page_builder_enabled', '0') != '1' && (!auth()->check() || !auth()->user()->isSuperAdmin())) {
+            return redirect()->route('admin.pages.index')->with('error', 'Fitur Visual Page Builder (Elementor Mode) sedang dinonaktifkan oleh Admin IT.');
+        }
+
         return view('admin.pages.builder', compact('page'));
     }
 
     public function saveBuilder(Request $request, Page $page)
     {
+        if (get_setting('feature_page_builder_enabled', '0') != '1' && (!auth()->check() || !auth()->user()->isSuperAdmin())) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Fitur Visual Page Builder sedang dinonaktifkan oleh Admin IT.'
+            ], 403);
+        }
+
         $html = $request->input('html', '');
         $css = $request->input('css', '');
         

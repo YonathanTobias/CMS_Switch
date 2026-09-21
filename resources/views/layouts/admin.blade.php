@@ -164,7 +164,7 @@
                         </div>
                         <div class="text-left hidden sm:block">
                             <div class="text-xs font-bold text-slate-700 leading-tight">{{ Auth::user()->name ?? 'Administrator' }}</div>
-                            <div class="text-[10px] text-slate-400 font-semibold">{{ Auth::user()->isSuperAdmin() ? 'Admin IT' : 'Admin Divisi' }}</div>
+                            <div class="text-[10px] text-slate-400 font-semibold">{{ (Auth::check() && Auth::user()->isSuperAdmin()) ? 'Admin IT' : 'Admin Divisi' }}</div>
                         </div>
                         <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
                     </button>

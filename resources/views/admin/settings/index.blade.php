@@ -490,8 +490,8 @@
                     </h3>
                     <p class="text-xs text-slate-500 mt-0.5">Aktifkan atau nonaktifkan modul fitur lanjutan sesuai kebutuhan operasional website.</p>
                 </div>
-                <span class="px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 text-[10px] font-extrabold uppercase border border-purple-200">
-                    Modul Fitur
+                <span class="px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 text-[10px] font-extrabold uppercase border border-rose-200 flex items-center">
+                    <i class="fa-solid fa-shield-halved mr-1.5 text-xs"></i> Khusus Admin IT (Super Admin)
                 </span>
             </div>
 
