@@ -31,7 +31,18 @@
                     @forelse($pages as $pg)
                     <tr class="hover:bg-slate-50 transition">
                         <td class="p-4 font-bold text-slate-400">#{{ $pg->order_index }}</td>
-                        <td class="p-4 font-bold text-slate-900">{{ $pg->title }}</td>
+                        <td class="p-4">
+                            <div class="font-bold text-slate-900">{{ $pg->title }}</div>
+                            @if(($pg->layout_type ?? 'standard') === 'blocks')
+                                <span class="inline-flex items-center space-x-1 text-[9px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 mt-0.5">
+                                    <i class="fa-solid fa-cubes text-[8px]"></i> <span>Visual Builder ({{ count($pg->blocks_data ?? []) }} Blok)</span>
+                                </span>
+                            @else
+                                <span class="inline-flex items-center space-x-1 text-[9px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded mt-0.5">
+                                    <i class="fa-solid fa-file-lines text-[8px]"></i> <span>Klasik</span>
+                                </span>
+                            @endif
+                        </td>
                         <td class="p-4 font-mono text-[11px] text-sky-600">/halaman/{{ $pg->slug }}</td>
                         <td class="p-4">
                             @if($pg->is_published)

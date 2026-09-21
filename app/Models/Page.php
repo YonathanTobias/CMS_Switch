@@ -13,13 +13,16 @@ class Page extends Model
     protected $fillable = [
         'title',
         'slug',
+        'layout_type',
         'content',
+        'blocks_data',
         'banner_image',
         'is_published',
         'order_index',
     ];
 
     protected $casts = [
+        'blocks_data' => 'array',
         'is_published' => 'boolean',
         'order_index' => 'integer',
     ];

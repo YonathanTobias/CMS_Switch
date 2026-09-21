@@ -23,10 +23,14 @@ class PageController extends Controller
 
     public function store(Request $request)
     {
+        $layoutType = $request->input('layout_type', 'standard');
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'banner_image' => 'nullable|image|max:3072',
+            'layout_type' => 'required|in:standard,blocks',
+            'content' => $layoutType === 'standard' ? 'required|string' : 'nullable|string',
+            'blocks_json' => 'nullable|string',
+            'banner_image' => 'nullable|image|max:5120',
             'is_published' => 'boolean',
             'order_index' => 'nullable|integer',
         ]);
@@ -34,9 +38,17 @@ class PageController extends Controller
         $validated['slug'] = Str::slug($validated['title']);
         $validated['is_published'] = $request->has('is_published');
         $validated['order_index'] = $request->input('order_index', 0);
+        $validated['content'] = $validated['content'] ?? '';
+
+        if ($layoutType === 'blocks' && !empty($request->input('blocks_json'))) {
+            $decoded = json_decode($request->input('blocks_json'), true);
+            $validated['blocks_data'] = is_array($decoded) ? $decoded : [];
+        } else {
+            $validated['blocks_data'] = null;
+        }
 
         if ($request->hasFile('banner_image')) {
-            $validated['banner_image'] = '/storage/' . $request->file('banner_image')->store('pages', 'public');
+            $validated['banner_image'] = \App\Services\ImageService::uploadAndOptimize($request->file('banner_image'), 'pages', 1920, 85);
         }
 
         Page::create($validated);
@@ -51,10 +63,14 @@ class PageController extends Controller
 
     public function update(Request $request, Page $page)
     {
+        $layoutType = $request->input('layout_type', 'standard');
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'banner_image' => 'nullable|image|max:3072',
+            'layout_type' => 'required|in:standard,blocks',
+            'content' => $layoutType === 'standard' ? 'required|string' : 'nullable|string',
+            'blocks_json' => 'nullable|string',
+            'banner_image' => 'nullable|image|max:5120',
             'is_published' => 'boolean',
             'order_index' => 'nullable|integer',
         ]);
@@ -62,12 +78,20 @@ class PageController extends Controller
         $validated['slug'] = Str::slug($validated['title']);
         $validated['is_published'] = $request->has('is_published');
         $validated['order_index'] = $request->input('order_index', 0);
+        $validated['content'] = $validated['content'] ?? '';
+
+        if ($layoutType === 'blocks' && !empty($request->input('blocks_json'))) {
+            $decoded = json_decode($request->input('blocks_json'), true);
+            $validated['blocks_data'] = is_array($decoded) ? $decoded : [];
+        } else {
+            $validated['blocks_data'] = null;
+        }
 
         if ($request->hasFile('banner_image')) {
             if ($page->banner_image && !str_starts_with($page->banner_image, 'http')) {
                 Storage::disk('public')->delete(str_replace('/storage/', '', $page->banner_image));
             }
-            $validated['banner_image'] = '/storage/' . $request->file('banner_image')->store('pages', 'public');
+            $validated['banner_image'] = \App\Services\ImageService::uploadAndOptimize($request->file('banner_image'), 'pages', 1920, 85);
         }
 
         $page->update($validated);
