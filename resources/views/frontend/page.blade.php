@@ -3,7 +3,12 @@
 @section('title', $page->title . ' - ' . get_setting('division_short_name', 'Divisi'))
 
 @section('content')
-@if(($page->layout_type ?? 'standard') === 'blocks' && !empty($page->blocks_data))
+@if(($page->layout_type ?? 'standard') === 'grapesjs')
+    {{-- Full GrapesJS Visual Builder Canvas Layout --}}
+    <div class="w-full">
+        {!! $page->content !!}
+    </div>
+@elseif(($page->layout_type ?? 'standard') === 'blocks' && !empty($page->blocks_data))
     {{-- Modular Block Builder Layout --}}
     <div class="space-y-0">
         @foreach($page->blocks_data as $block)

@@ -99,6 +99,41 @@ class PageController extends Controller
         return redirect()->route('admin.pages.index')->with('success', 'Halaman kustom berhasil diperbarui.');
     }
 
+    public function builder(Page $page)
+    {
+        return view('admin.pages.builder', compact('page'));
+    }
+
+    public function saveBuilder(Request $request, Page $page)
+    {
+        $html = $request->input('html', '');
+        $css = $request->input('css', '');
+        
+        $content = '';
+        if (!empty(trim($css))) {
+            $content .= '<style>' . $css . '</style>' . "\n";
+        }
+        $content .= $html;
+
+        $gjsProject = [
+            'components' => json_decode($request->input('components', '[]'), true),
+            'styles' => json_decode($request->input('styles', '[]'), true),
+            'html' => $html,
+            'css' => $css,
+        ];
+
+        $page->update([
+            'layout_type' => 'grapesjs',
+            'content' => $content,
+            'blocks_data' => $gjsProject,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Halaman visual builder berhasil disimpan!'
+        ]);
+    }
+
     public function destroy(Page $page)
     {
         if ($page->banner_image && !str_starts_with($page->banner_image, 'http')) {
@@ -109,3 +144,4 @@ class PageController extends Controller
         return back()->with('success', 'Halaman kustom berhasil dihapus.');
     }
 }
+
