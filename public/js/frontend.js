@@ -6,12 +6,17 @@
 // Configure Tailwind CSS
 if (typeof tailwind !== 'undefined') {
     tailwind.config = {
+        darkMode: 'class',
         theme: {
             extend: {
                 fontFamily: {
                     sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                 },
                 colors: {
+                    theme: {
+                        primary: 'var(--color-primary, #0e7490)',
+                        secondary: 'var(--color-secondary, #0369a1)',
+                    },
                     brand: {
                         50: '#f0f9ff',
                         100: '#e0f2fe',

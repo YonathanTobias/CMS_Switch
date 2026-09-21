@@ -12,6 +12,27 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        theme: {
+                            primary: 'var(--color-primary)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <script src="{{ asset('js/admin.js') }}"></script>
     
     <!-- FontAwesome 6 -->
@@ -34,7 +55,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex" x-data="{ sidebarOpen: false }">
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased min-h-screen flex" x-data="{ sidebarOpen: false, isDark: document.documentElement.classList.contains('dark'), toggleDark() { this.isDark = !this.isDark; if(this.isDark) { document.documentElement.classList.add('dark'); localStorage.theme = 'dark'; } else { document.documentElement.classList.remove('dark'); localStorage.theme = 'light'; } } }">
 
     <!-- Mobile Sidebar Backdrop -->
     <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm lg:hidden" style="display: none;"></div>
@@ -145,15 +166,21 @@
                 </div>
             </div>
 
-            <!-- User Menu -->
-            <div class="flex items-center space-x-4" x-data="{ userMenuOpen: false }">
+            <!-- User Menu & Dark Mode Toggle -->
+            <div class="flex items-center space-x-3" x-data="{ userMenuOpen: false }">
+                <!-- Theme Toggle -->
+                <button @click="toggleDark()" type="button" class="w-9 h-9 rounded-xl flex items-center justify-center text-slate-600 hover:text-slate-900 dark:text-amber-400 dark:hover:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition shadow-sm focus:outline-none" title="Ganti Mode Gelap / Terang" aria-label="Toggle Theme">
+                    <i class="fa-solid fa-sun text-sm text-amber-400" x-show="isDark" style="display: none;"></i>
+                    <i class="fa-solid fa-moon text-sm text-slate-600" x-show="!isDark"></i>
+                </button>
+
                 @if(Auth::check() && Auth::user()->isSuperAdmin())
-                <a href="{{ route('admin.settings.index') }}" class="hidden md:inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100 transition font-semibold">
-                    <i class="fa-solid fa-palette mr-1.5 text-amber-600"></i> Mode: {{ get_setting('division_acronym', 'DIVISI') }}
+                <a href="{{ route('admin.settings.index') }}" class="hidden md:inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 transition font-semibold">
+                    <i class="fa-solid fa-palette mr-1.5 text-amber-600 dark:text-amber-400"></i> Mode: {{ get_setting('division_acronym', 'DIVISI') }}
                 </a>
                 @else
-                <span class="hidden md:inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-sky-50 text-sky-800 border border-sky-200 font-semibold">
-                    <i class="fa-solid fa-user-shield mr-1.5 text-sky-600"></i> Admin Divisi
+                <span class="hidden md:inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-sky-50 text-sky-800 dark:bg-sky-950/40 dark:text-sky-300 border border-sky-200 dark:border-sky-800 font-semibold">
+                    <i class="fa-solid fa-user-shield mr-1.5 text-sky-600 dark:text-sky-400"></i> Admin Divisi
                 </span>
                 @endif
 

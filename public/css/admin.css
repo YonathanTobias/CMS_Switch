@@ -74,3 +74,107 @@
 .admin-table tr {
     transition: background-color 0.15s ease;
 }
+
+/* ==========================================================================
+   Admin Dark Mode Custom System
+   ========================================================================== */
+.dark body {
+    background-color: #090d16 !important;
+    color: #cbd5e1;
+}
+
+.dark header {
+    background-color: #0f172a !important;
+    border-color: #1e293b !important;
+}
+
+.dark aside {
+    background-color: #0b0f19 !important;
+    border-color: #1e293b !important;
+}
+
+.dark .bg-white {
+    background-color: #131c2e !important;
+    color: #f1f5f9;
+}
+
+.dark .bg-slate-50 {
+    background-color: #0f172a !important;
+}
+
+.dark .bg-slate-100 {
+    background-color: #1e293b !important;
+}
+
+.dark .text-slate-900 {
+    color: #f8fafc !important;
+}
+
+.dark .text-slate-800 {
+    color: #f1f5f9 !important;
+}
+
+.dark .text-slate-700 {
+    color: #cbd5e1 !important;
+}
+
+.dark .text-slate-600 {
+    color: #94a3b8 !important;
+}
+
+.dark .text-slate-500 {
+    color: #94a3b8 !important;
+}
+
+.dark .border-slate-200,
+.dark .border-slate-100 {
+    border-color: #1e293b !important;
+}
+
+.dark .border-slate-300 {
+    border-color: #334155 !important;
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]),
+.dark select,
+.dark textarea {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]):focus,
+.dark select:focus,
+.dark textarea:focus {
+    border-color: var(--color-primary, #0e7490) !important;
+}
+
+.dark .ql-toolbar.ql-snow {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+.dark .ql-toolbar.ql-snow .ql-stroke {
+    stroke: #94a3b8 !important;
+}
+
+.dark .ql-toolbar.ql-snow .ql-fill {
+    fill: #94a3b8 !important;
+}
+
+.dark .ql-toolbar.ql-snow .ql-picker-label {
+    color: #94a3b8 !important;
+}
+
+.dark .ql-container.ql-snow {
+    background-color: #0b0f19 !important;
+    color: #f1f5f9 !important;
+    border-color: #334155 !important;
+}
+
+.dark .shadow-sm,
+.dark .shadow-md,
+.dark .shadow-lg {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+}
+

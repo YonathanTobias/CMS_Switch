@@ -13,6 +13,28 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        theme: {
+                            primary: 'var(--color-primary)',
+                            secondary: 'var(--color-secondary)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <script src="{{ asset('js/frontend.js') }}"></script>
     
     <!-- FontAwesome 6 -->
@@ -58,7 +80,7 @@
     </div>
 
     <!-- Main Navigation Header -->
-    <header class="bg-white sticky top-0 z-50 shadow-sm border-b border-slate-200" x-data="{ mobileMenuOpen: false }">
+    <header class="bg-white sticky top-0 z-50 shadow-sm border-b border-slate-200" x-data="{ mobileMenuOpen: false, isDark: document.documentElement.classList.contains('dark'), toggleDark() { this.isDark = !this.isDark; if(this.isDark) { document.documentElement.classList.add('dark'); localStorage.theme = 'dark'; } else { document.documentElement.classList.remove('dark'); localStorage.theme = 'light'; } } }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <!-- Logo & Division Title -->
@@ -128,14 +150,21 @@
                             </a>
                         @endif
                     @endforeach
-                    
-                    <a href="{{ route('contact') }}" class="ml-3 inline-flex items-center text-white px-4 py-2 rounded-lg shadow-sm hover:opacity-90 transition font-medium text-xs tracking-wide uppercase" style="background-color: var(--color-primary);">
-                        <i class="fa-solid fa-paper-plane mr-2"></i> Hubungi Kami
-                    </a>
+
+                    <!-- Dark Mode Toggle (Desktop) -->
+                    <button @click="toggleDark()" type="button" class="ml-3 w-9 h-9 rounded-lg flex items-center justify-center text-slate-600 hover:text-slate-900 dark:text-amber-400 dark:hover:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition shadow-sm focus:outline-none" title="Ganti Mode Gelap / Terang" aria-label="Toggle Theme">
+                        <i class="fa-solid fa-sun text-sm text-amber-400" x-show="isDark" style="display: none;"></i>
+                        <i class="fa-solid fa-moon text-sm text-slate-600" x-show="!isDark"></i>
+                    </button>
                 </nav>
 
-                <!-- Mobile Menu Button -->
-                <div class="flex items-center lg:hidden">
+                <!-- Mobile Menu & Theme Button -->
+                <div class="flex items-center space-x-2 lg:hidden">
+                    <!-- Dark Mode Toggle (Mobile) -->
+                    <button @click="toggleDark()" type="button" class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-600 hover:text-slate-900 dark:text-amber-400 dark:hover:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition shadow-sm focus:outline-none" title="Ganti Mode Gelap / Terang" aria-label="Toggle Theme">
+                        <i class="fa-solid fa-sun text-sm text-amber-400" x-show="isDark" style="display: none;"></i>
+                        <i class="fa-solid fa-moon text-sm text-slate-600" x-show="!isDark"></i>
+                    </button>
                     <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="text-slate-600 hover:text-slate-900 p-2 rounded-lg focus:outline-none">
                         <i class="fa-solid fa-bars text-xl" x-show="!mobileMenuOpen"></i>
                         <i class="fa-solid fa-xmark text-xl" x-show="mobileMenuOpen" style="display: none;"></i>

@@ -6,12 +6,16 @@
 // Configure Tailwind CSS for Admin Panel
 if (typeof tailwind !== 'undefined') {
     tailwind.config = {
+        darkMode: 'class',
         theme: {
             extend: {
                 fontFamily: {
                     sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                 },
                 colors: {
+                    theme: {
+                        primary: 'var(--color-primary, #0e7490)',
+                    },
                     brand: {
                         500: 'var(--color-primary, #0e7490)',
                         600: 'var(--color-primary, #0e7490)',
