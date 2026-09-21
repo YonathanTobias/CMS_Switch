@@ -99,6 +99,26 @@ class PageController extends Controller
         return redirect()->route('admin.pages.index')->with('success', 'Halaman kustom berhasil diperbarui.');
     }
 
+    public function uploadAsset(Request $request)
+    {
+        $request->validate([
+            'files' => 'required',
+            'files.*' => 'image|max:5120'
+        ]);
+
+        $urls = [];
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $url = \App\Services\ImageService::uploadAndOptimize($file, 'pages/assets', 1920, 85);
+                $urls[] = $url;
+            }
+        }
+
+        return response()->json([
+            'data' => $urls
+        ]);
+    }
+
     public function builder(Page $page)
     {
         return view('admin.pages.builder', compact('page'));

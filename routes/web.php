@@ -108,6 +108,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('events', EventController::class);
         Route::resource('documents', DocumentController::class);
         Route::resource('galleries', GalleryController::class)->only(['index', 'store', 'destroy']);
+        Route::post('pages/upload-asset', [PageController::class, 'uploadAsset'])->name('pages.uploadAsset');
         Route::get('pages/{page}/builder', [PageController::class, 'builder'])->name('pages.builder');
         Route::post('pages/{page}/builder', [PageController::class, 'saveBuilder'])->name('pages.builder.save');
         Route::resource('pages', PageController::class);
