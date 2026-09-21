@@ -17,6 +17,7 @@
     <input type="hidden" name="blocks_json" :value="JSON.stringify(blocks)">
 
     <!-- Layout Type Selector -->
+    @if(get_setting('feature_page_builder_enabled', '0') == '1')
     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
             <i class="fa-solid fa-layer-group text-theme-primary mr-1.5"></i> Mode Tampilan Halaman
@@ -52,6 +53,7 @@
             </button>
         </div>
     </div>
+    @endif
 
     <!-- STANDARD EDITOR CONTAINER -->
     <div x-show="layoutType === 'standard'" class="space-y-6">

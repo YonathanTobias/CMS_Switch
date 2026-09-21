@@ -32,6 +32,9 @@
         <button @click="activeTab = 'stats'" :class="activeTab === 'stats' ? 'bg-theme-primary text-white shadow' : 'bg-white text-slate-600 hover:bg-slate-50'" class="px-4 py-2 rounded-xl transition flex items-center">
             <i class="fa-solid fa-chart-simple mr-2"></i> Statistik Beranda
         </button>
+        <button @click="activeTab = 'features'" :class="activeTab === 'features' ? 'bg-purple-600 text-white shadow' : 'bg-white text-slate-600 hover:bg-slate-50'" class="px-4 py-2 rounded-xl transition flex items-center">
+            <i class="fa-solid fa-flask mr-2 text-amber-400"></i> Fitur Tambahan & Lab
+        </button>
     </div>
 
     <!-- TAB 1: 1-CLICK PRESET SWITCHER -->
@@ -474,6 +477,64 @@
             <div class="pt-4 border-t">
                 <button type="submit" class="px-6 py-2.5 rounded-xl bg-theme-primary text-white font-bold text-xs uppercase tracking-wider shadow hover:opacity-90 transition">
                     Simpan Statistik
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB 7: FITUR TAMBAHAN & LAB (ON / OFF SWITCH) -->
+        <div x-show="activeTab === 'features'" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6" style="display: none;">
+            <div class="flex items-center justify-between border-b pb-4">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 flex items-center">
+                        <i class="fa-solid fa-flask mr-2 text-purple-600"></i> Fitur Eksperimental & Laboratorium CMS
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Aktifkan atau nonaktifkan modul fitur lanjutan sesuai kebutuhan operasional website.</p>
+                </div>
+                <span class="px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 text-[10px] font-extrabold uppercase border border-purple-200">
+                    Modul Fitur
+                </span>
+            </div>
+
+            <!-- Feature 1: Visual Page Builder (GrapesJS / Elementor Mode) -->
+            <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-50 to-purple-50/40 border border-slate-200 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-xl shrink-0 shadow-sm">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h4 class="text-sm font-extrabold text-slate-900">Visual Page Builder (Elementor Mode)</h4>
+                                <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[9px] font-black uppercase">GrapesJS Studio</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mt-1 max-w-xl leading-relaxed">
+                                Mengaktifkan tombol <strong>"Studio"</strong> dan kanvas visual *drag-and-drop* pada menu Halaman Kustom (<code class="text-purple-700 bg-purple-100/50 px-1 py-0.5 rounded">/admin/pages</code>). Jika dinonaktifkan (OFF), panel admin akan kembali bersih hanya menampilkan editor klasik.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Toggle Switch -->
+                    <div class="flex items-center space-x-3 shrink-0">
+                        <input type="hidden" name="feature_page_builder_enabled" value="0">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="feature_page_builder_enabled" value="1" {{ old('feature_page_builder_enabled', $settings['feature_page_builder_enabled'] ?? '0') == '1' ? 'checked' : '' }} class="sr-only peer">
+                            <div class="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-purple-600"></div>
+                        </label>
+                        <span class="text-xs font-bold {{ old('feature_page_builder_enabled', $settings['feature_page_builder_enabled'] ?? '0') == '1' ? 'text-purple-700' : 'text-slate-400' }}">
+                            {{ old('feature_page_builder_enabled', $settings['feature_page_builder_enabled'] ?? '0') == '1' ? 'AKTIF (ON)' : 'NONAKTIF (OFF)' }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white rounded-xl border border-purple-100 text-[11px] text-slate-600 flex items-center space-x-2">
+                    <i class="fa-solid fa-circle-info text-purple-600"></i>
+                    <span>Default: <strong>Nonaktif (OFF)</strong>. Anda dapat mengaktifkannya kapan saja di masa depan.</span>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t">
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs uppercase tracking-wider shadow transition">
+                    Simpan Pengaturan Fitur
                 </button>
             </div>
         </div>

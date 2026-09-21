@@ -10,16 +10,19 @@
             </a>
             <div>
                 <h1 class="text-2xl font-extrabold text-slate-900">Edit Halaman Kustom</h1>
-                <p class="text-xs text-slate-500">Perbarui isi konten atau susun blok halaman visual.</p>
+                <p class="text-xs text-slate-500">Perbarui isi konten halaman.</p>
             </div>
         </div>
 
+        @if(get_setting('feature_page_builder_enabled', '0') == '1')
         <a href="{{ route('admin.pages.builder', $page->id) }}" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow transition flex items-center space-x-2 border border-slate-700">
             <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
             <span>Buka Studio Visual (Elementor Mode)</span>
         </a>
+        @endif
     </div>
 
+    @if(get_setting('feature_page_builder_enabled', '0') == '1')
     <!-- Studio Quick Banner -->
     <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 rounded-2xl p-4 sm:p-5 text-white shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-sky-900/50">
         <div class="flex items-center space-x-3.5">
@@ -39,6 +42,7 @@
             <span>Buka Studio Visual</span>
         </a>
     </div>
+    @endif
 
     <form action="{{ route('admin.pages.update', $page->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6" id="pageForm">
         @csrf

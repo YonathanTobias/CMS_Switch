@@ -33,18 +33,20 @@
                         <td class="p-4 font-bold text-slate-400">#{{ $pg->order_index }}</td>
                         <td class="p-4">
                             <div class="font-bold text-slate-900">{{ $pg->title }}</div>
-                            @if(($pg->layout_type ?? 'standard') === 'grapesjs')
-                                <span class="inline-flex items-center space-x-1 text-[9px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200 mt-0.5">
-                                    <i class="fa-solid fa-wand-magic-sparkles text-[8px]"></i> <span>Visual Drag & Drop (GrapesJS)</span>
-                                </span>
-                            @elseif(($pg->layout_type ?? 'standard') === 'blocks')
-                                <span class="inline-flex items-center space-x-1 text-[9px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 mt-0.5">
-                                    <i class="fa-solid fa-cubes text-[8px]"></i> <span>Block Builder ({{ count($pg->blocks_data ?? []) }} Blok)</span>
-                                </span>
-                            @else
-                                <span class="inline-flex items-center space-x-1 text-[9px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded mt-0.5">
-                                    <i class="fa-solid fa-file-lines text-[8px]"></i> <span>Klasik</span>
-                                </span>
+                            @if(get_setting('feature_page_builder_enabled', '0') == '1')
+                                @if(($pg->layout_type ?? 'standard') === 'grapesjs')
+                                    <span class="inline-flex items-center space-x-1 text-[9px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200 mt-0.5">
+                                        <i class="fa-solid fa-wand-magic-sparkles text-[8px]"></i> <span>Visual Drag & Drop (GrapesJS)</span>
+                                    </span>
+                                @elseif(($pg->layout_type ?? 'standard') === 'blocks')
+                                    <span class="inline-flex items-center space-x-1 text-[9px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 mt-0.5">
+                                        <i class="fa-solid fa-cubes text-[8px]"></i> <span>Block Builder ({{ count($pg->blocks_data ?? []) }} Blok)</span>
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center space-x-1 text-[9px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded mt-0.5">
+                                        <i class="fa-solid fa-file-lines text-[8px]"></i> <span>Klasik</span>
+                                    </span>
+                                @endif
                             @endif
                         </td>
                         <td class="p-4 font-mono text-[11px] text-sky-600">/halaman/{{ $pg->slug }}</td>
@@ -56,9 +58,11 @@
                             @endif
                         </td>
                         <td class="p-4 text-right space-x-1.5">
+                            @if(get_setting('feature_page_builder_enabled', '0') == '1')
                             <a href="{{ route('admin.pages.builder', $pg->id) }}" class="px-2.5 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 text-xs font-bold transition inline-flex items-center space-x-1" title="Buka Drag & Drop Visual Builder (GrapesJS)">
                                 <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i> <span class="hidden md:inline">Studio</span>
                             </a>
+                            @endif
                             <a href="{{ route('page', $pg->slug) }}" target="_blank" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition" title="Lihat"><i class="fa-regular fa-eye"></i></a>
                             <a href="{{ route('admin.pages.edit', $pg->id) }}" class="p-1.5 rounded-lg text-sky-600 hover:bg-sky-50 transition" title="Edit Form"><i class="fa-regular fa-pen-to-square"></i></a>
                             <form action="{{ route('admin.pages.destroy', $pg->id) }}" method="POST" class="inline" onsubmit="return confirm('Hapus halaman ini?');">
