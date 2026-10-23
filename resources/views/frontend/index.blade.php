@@ -220,12 +220,10 @@
         <!-- Vision & Mission Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mb-12">
             <!-- Visi Card (5 cols) -->
-            <div class="lg:col-span-5 bg-white rounded-3xl p-8 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-2xl group-hover:scale-125 transition duration-500"></div>
-                
+            <div class="lg:col-span-5 bg-white rounded-2xl p-7 shadow-sm border border-slate-200 flex flex-col justify-between relative group hover:shadow-md transition">
                 <div class="space-y-6 relative z-10">
                     <div class="flex items-center space-x-3">
-                        <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xl shadow" style="background-color: var(--color-primary);">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl shadow" style="background-color: var(--color-primary);">
                             <i class="fa-solid fa-compass"></i>
                         </div>
                         <div>
@@ -234,7 +232,7 @@
                         </div>
                     </div>
 
-                    <blockquote class="text-sm sm:text-base text-slate-700 leading-relaxed italic bg-slate-50 p-6 rounded-2xl border-l-4" style="border-left-color: var(--color-primary);">
+                    <blockquote class="text-sm sm:text-base text-slate-700 leading-relaxed italic bg-slate-50 p-6 rounded-xl border-l-4" style="border-left-color: var(--color-primary);">
                         "{{ get_setting('vision', 'Menjadi Program Studi terkemuka yang menghasilkan lulusan unggul, kompeten, dan berkarakter kasih pada tahun 2030.') }}"
                     </blockquote>
                 </div>
@@ -246,7 +244,7 @@
             </div>
 
             <!-- Misi Card (7 cols) -->
-            <div class="lg:col-span-7 bg-white rounded-3xl p-8 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
+            <div class="lg:col-span-7 bg-white rounded-2xl p-7 shadow-sm border border-slate-200 flex flex-col justify-between relative group hover:shadow-md transition">
                 <div class="space-y-6">
                     <div class="flex items-center space-x-3">
                         <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-sm border border-emerald-100">
@@ -351,8 +349,7 @@
 
             <!-- Right Box: Dynamic Info / Service Highlight Card -->
             <div class="lg:col-span-6">
-                <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
-                    <div class="absolute -top-10 -right-10 w-48 h-48 bg-sky-500/20 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="bg-slate-900 rounded-2xl p-7 text-white shadow-lg border border-slate-800 relative overflow-hidden">
                     <div class="relative z-10 space-y-6">
                         <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-xl text-sky-400">
                             <i class="{{ get_setting('info_box_icon', (get_setting('enable_services', '1') !== '0' ? 'fa-solid fa-hand-holding-medical' : 'fa-solid fa-circle-info')) }}"></i>
@@ -503,7 +500,7 @@
                 <div class="px-6 pb-6 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
                     <span class="text-slate-400"><i class="fa-regular fa-eye mr-1"></i> {{ $post->views_count }} pembaca</span>
                     <a href="{{ route('posts.detail', $post->slug) }}" class="font-bold text-theme-primary flex items-center hover:underline">
-                        Baca Selengkapnya <i class="fa-solid fa-arrow-right ml-1.5 text-[10px]"></i>
+                        Baca Artikel Lengkap <i class="fa-solid fa-arrow-right ml-1.5 text-[10px]"></i>
                     </a>
                 </div>
             </article>

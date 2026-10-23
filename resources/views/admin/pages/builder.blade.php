@@ -489,7 +489,7 @@
                 label: 'Tombol Aksi (CTA)',
                 category: '2. Elemen Dasar',
                 media: '<i class="fa-solid fa-arrow-pointer gjs-block-icon text-emerald-400"></i>',
-                content: `<a href="#" class="inline-flex items-center px-6 py-3 rounded-xl bg-theme-primary text-white font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5"><span>Pelajari Selengkapnya</span> <i class="fa-solid fa-arrow-right ml-2 text-[10px]"></i></a>`
+                content: `<a href="/layanan" class="inline-flex items-center px-6 py-3 rounded-xl bg-theme-primary text-white font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5"><span>Pelajari Layanan</span> <i class="fa-solid fa-arrow-right ml-2 text-[10px]"></i></a>`
             });
 
             bm.add('pro-image', {
@@ -588,7 +588,7 @@
                         <li class="flex items-center"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Modul Pembelajaran Digital</li>
                         <li class="flex items-center"><i class="fa-solid fa-check text-emerald-500 mr-2"></i> Sertifikasi Kompetensi Resmi</li>
                     </ul>
-                    <a href="#" class="w-full py-3 rounded-xl bg-theme-primary text-white font-bold text-xs uppercase tracking-wider block shadow hover:opacity-90 transition">Daftar Sekarang</a>
+                    <a href="/kontak" class="w-full py-3 rounded-xl bg-theme-primary text-white font-bold text-xs uppercase tracking-wider block shadow hover:opacity-90 transition">Daftar Sekarang</a>
                 </div>`
             });
 
@@ -684,9 +684,9 @@
                         <p class="text-xs text-theme-primary font-semibold">Ketua Program Studi Keperawatan</p>
                     </div>
                     <div class="flex justify-center space-x-2 text-slate-400 text-xs">
-                        <a href="#" class="p-1.5 hover:text-sky-600"><i class="fa-brands fa-linkedin"></i></a>
-                        <a href="#" class="p-1.5 hover:text-emerald-600"><i class="fa-brands fa-whatsapp"></i></a>
-                        <a href="#" class="p-1.5 hover:text-rose-600"><i class="fa-solid fa-envelope"></i></a>
+                        <a href="https://linkedin.com" target="_blank" class="p-1.5 hover:text-sky-600"><i class="fa-brands fa-linkedin"></i></a>
+                        <a href="https://wa.me/" target="_blank" class="p-1.5 hover:text-emerald-600"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="mailto:info@pantiwaluya.ac.id" class="p-1.5 hover:text-rose-600"><i class="fa-solid fa-envelope"></i></a>
                     </div>
                 </div>`
             });
@@ -705,8 +705,8 @@
                         <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">Pusat Layanan & Informasi Terpadu</h1>
                         <p class="text-base sm:text-lg text-slate-100 max-w-2xl mx-auto font-normal leading-relaxed">Memberikan kemudahan akses dan transparansi layanan prima untuk seluruh sivitas akademika.</p>
                         <div class="flex flex-wrap justify-center gap-4 pt-4">
-                            <a href="#" class="px-6 py-3 rounded-xl bg-white text-slate-900 font-bold text-sm shadow-xl hover:bg-slate-100 transition">Mulai Jelajahi</a>
-                            <a href="#" class="px-6 py-3 rounded-xl bg-white/20 text-white font-bold text-sm border border-white/30 hover:bg-white/30 transition">Hubungi Kami</a>
+                            <a href="#fasilitas" class="px-6 py-3 rounded-xl bg-white text-slate-900 font-bold text-sm shadow-xl hover:bg-slate-100 transition">Mulai Jelajahi</a>
+                            <a href="/kontak" class="px-6 py-3 rounded-xl bg-white/20 text-white font-bold text-sm border border-white/30 hover:bg-white/30 transition">Hubungi Kami</a>
                         </div>
                     </div>
                 </div>`
@@ -756,7 +756,7 @@
                                 <h2 class="text-3xl font-extrabold text-slate-900 leading-tight">Meningkatkan Standar Pendidikan dan Kesehatan</h2>
                                 <p class="text-sm text-slate-600 leading-relaxed">Kami berdedikasi menciptakan ekosistem kampus yang inovatif dengan menghadirkan sarana prasarana modern bagi seluruh civitas akademika.</p>
                                 <div class="pt-2">
-                                    <a href="#" class="px-6 py-2.5 rounded-xl bg-theme-primary text-white font-bold text-xs uppercase tracking-wider shadow">Pelajari Lebih Lanjut</a>
+                                    <a href="/profil" class="px-6 py-2.5 rounded-xl bg-theme-primary text-white font-bold text-xs uppercase tracking-wider shadow">Pelajari Profil Lengkap</a>
                                 </div>
                             </div>
                             <div class="lg:col-span-6">

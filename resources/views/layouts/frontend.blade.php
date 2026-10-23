@@ -152,7 +152,7 @@
                     @endforeach
 
                     <!-- Dark Mode Toggle (Desktop) -->
-                    <button @click="toggleDark()" type="button" class="ml-3 w-9 h-9 rounded-lg flex items-center justify-center text-slate-600 hover:text-slate-900 dark:text-amber-400 dark:hover:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition shadow-sm focus:outline-none" title="Ganti Mode Gelap / Terang" aria-label="Toggle Theme">
+                    <button @click="toggleDark()" type="button" class="ml-3 w-9 h-9 rounded-lg flex items-center justify-center text-slate-600 hover:text-slate-900 dark:text-amber-400 dark:hover:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900" title="Ganti Mode Gelap / Terang" aria-label="Toggle Theme">
                         <i class="fa-solid fa-sun text-sm text-amber-400" x-show="isDark" style="display: none;"></i>
                         <i class="fa-solid fa-moon text-sm text-slate-600" x-show="!isDark"></i>
                     </button>
@@ -161,11 +161,11 @@
                 <!-- Mobile Menu & Theme Button -->
                 <div class="flex items-center space-x-2 lg:hidden">
                     <!-- Dark Mode Toggle (Mobile) -->
-                    <button @click="toggleDark()" type="button" class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-600 hover:text-slate-900 dark:text-amber-400 dark:hover:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition shadow-sm focus:outline-none" title="Ganti Mode Gelap / Terang" aria-label="Toggle Theme">
+                    <button @click="toggleDark()" type="button" class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-600 hover:text-slate-900 dark:text-amber-400 dark:hover:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900" title="Ganti Mode Gelap / Terang" aria-label="Toggle Theme">
                         <i class="fa-solid fa-sun text-sm text-amber-400" x-show="isDark" style="display: none;"></i>
                         <i class="fa-solid fa-moon text-sm text-slate-600" x-show="!isDark"></i>
                     </button>
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="text-slate-600 hover:text-slate-900 p-2 rounded-lg focus:outline-none">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="text-slate-600 hover:text-slate-900 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900" aria-label="Buka Menu Navigasi">
                         <i class="fa-solid fa-bars text-xl" x-show="!mobileMenuOpen"></i>
                         <i class="fa-solid fa-xmark text-xl" x-show="mobileMenuOpen" style="display: none;"></i>
                     </button>

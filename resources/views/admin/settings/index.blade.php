@@ -52,7 +52,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($presets as $key => $preset)
+            @forelse($presets as $key => $preset)
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between space-y-4 hover:shadow-md transition">
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
@@ -85,7 +85,13 @@
                     </button>
                 </form>
             </div>
-            @endforeach
+            @empty
+            <div class="col-span-3 text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300 text-slate-400">
+                <i class="fa-solid fa-palette text-3xl mb-2 text-slate-300"></i>
+                <p class="text-sm font-semibold">Belum ada data preset divisi yang tersedia.</p>
+                <p class="text-xs text-slate-400 mt-1">Anda tetap dapat mengatur seluruh identitas secara manual melalui form di bawah.</p>
+            </div>
+            @endforelse
         </div>
     </div>
 
@@ -518,7 +524,7 @@
                         <input type="hidden" name="feature_page_builder_enabled" value="0">
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="feature_page_builder_enabled" value="1" {{ old('feature_page_builder_enabled', $settings['feature_page_builder_enabled'] ?? '0') == '1' ? 'checked' : '' }} class="sr-only peer">
-                            <div class="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-purple-600"></div>
+                            <div class="w-14 h-7 bg-slate-200 peer-focus:outline-none focus:ring-2 focus:ring-purple-500 peer-focus:ring-2 peer-focus:ring-purple-500 peer-focus:ring-offset-2 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-purple-600"></div>
                         </label>
                         <span class="text-xs font-bold {{ old('feature_page_builder_enabled', $settings['feature_page_builder_enabled'] ?? '0') == '1' ? 'text-purple-700' : 'text-slate-400' }}">
                             {{ old('feature_page_builder_enabled', $settings['feature_page_builder_enabled'] ?? '0') == '1' ? 'AKTIF (ON)' : 'NONAKTIF (OFF)' }}
