@@ -230,9 +230,11 @@
                 </p>
 
                 <div class="flex flex-wrap gap-4 pt-4">
+                    @if(get_setting('enable_services', '1') !== '0')
                     <a href="{{ route('services') }}" class="px-6 py-3 rounded-xl bg-white text-slate-900 font-bold text-sm shadow-lg hover:bg-slate-100 hover:shadow-xl transition transform hover:-translate-y-0.5 flex items-center">
                         <i class="fa-solid fa-list-check mr-2 text-sky-600"></i> Jelajahi Layanan
                     </a>
+                    @endif
                     <a href="{{ route('profile') }}" class="px-6 py-3 rounded-xl bg-white/15 backdrop-blur-md text-white font-semibold text-sm border border-white/30 hover:bg-white/25 transition flex items-center">
                         <i class="fa-solid fa-circle-info mr-2"></i> Profil & Visi Misi
                     </a>

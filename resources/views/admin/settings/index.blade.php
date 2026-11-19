@@ -5,7 +5,8 @@
 @section('content')
 <div class="space-y-8" x-data="{
     activeTab: '{{ Auth::check() && Auth::user()->isSuperAdmin() ? 'presets' : 'general' }}',
-    waFloatingEnabled: '{{ old('enable_whatsapp_floating', $settings['enable_whatsapp_floating'] ?? '1') }}' === '1'
+    waFloatingEnabled: '{{ old('enable_whatsapp_floating', $settings['enable_whatsapp_floating'] ?? '1') }}' === '1',
+    servicesEnabled: '{{ old('enable_services', $settings['enable_services'] ?? '1') }}' !== '0'
 }">
     <div>
         <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Konfigurasi Identitas & Pengaturan Website</h1>
@@ -183,11 +184,12 @@
                             Pilih apakah website menampilkan modul dan menu <strong>"Layanan"</strong>. Jika dinonaktifkan, menu navigasi Layanan dan kartu layanan di beranda akan otomatis disembunyikan.
                         </p>
                     </div>
-                    <div class="flex-shrink-0">
-                        <select name="enable_services" class="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-bold bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm">
-                            <option value="1" {{ ($settings['enable_services'] ?? '1') !== '0' ? 'selected' : '' }}>✅ Aktif (Tampilkan Layanan)</option>
-                            <option value="0" {{ ($settings['enable_services'] ?? '1') === '0' ? 'selected' : '' }}>❌ Nonaktif (Sembunyikan)</option>
-                        </select>
+                    <div class="flex items-center space-x-3 shrink-0">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" x-model="servicesEnabled" class="sr-only peer">
+                            <div class="w-14 h-7 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-sky-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-sky-600"></div>
+                        </label>
+                        <span class="text-xs font-bold" :class="servicesEnabled ? 'text-sky-700' : 'text-slate-500'" x-text="servicesEnabled ? 'AKTIF (ON)' : 'NONAKTIF (OFF)'"></span>
                     </div>
                 </div>
 
@@ -613,6 +615,36 @@
                     <button type="button" @click="activeTab = 'contact'" class="text-emerald-600 dark:text-emerald-400 font-bold hover:underline">
                         Ubah Nomor WA &rarr;
                     </button>
+                </div>
+            </div>
+
+            <!-- Feature 3: Modul Layanan Divisi (ON / OFF Switch) -->
+            <div class="p-5 sm:p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-sky-600 text-white flex items-center justify-center text-xl shrink-0 shadow-sm">
+                            <i class="fa-solid fa-briefcase-medical"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h4 class="text-sm font-extrabold text-slate-900 dark:text-white">Modul Layanan Divisi</h4>
+                                <span class="px-2 py-0.5 rounded bg-sky-100 dark:bg-sky-950/60 text-sky-800 dark:text-sky-300 border border-sky-200 dark:border-sky-800/60 text-[9px] font-black uppercase">Katalog Layanan</span>
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-xl leading-relaxed">
+                                Mengatur tampilan menu <strong>"Layanan"</strong> di navbar, seksi katalog layanan di beranda, dan halaman <code class="text-sky-700 dark:text-sky-300 bg-sky-100/60 dark:bg-sky-950/80 px-1 py-0.5 rounded border border-sky-200 dark:border-sky-800/60">/layanan</code>. Cocok dinonaktifkan untuk divisi/prodi yang tidak memerlukan katalog layanan khusus.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Toggle Switch (Synced via Alpine servicesEnabled) -->
+                    <div class="flex items-center space-x-3 shrink-0">
+                        <input type="hidden" name="enable_services" :value="servicesEnabled ? '1' : '0'">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" x-model="servicesEnabled" class="sr-only peer">
+                            <div class="w-14 h-7 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none focus:ring-2 focus:ring-sky-500 peer-focus:ring-2 peer-focus:ring-sky-500 peer-focus:ring-offset-2 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-slate-300 dark:after:border-slate-600 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-sky-600"></div>
+                        </label>
+                        <span class="text-xs font-bold" :class="servicesEnabled ? 'text-sky-600 dark:text-sky-400' : 'text-slate-500 dark:text-slate-400'" x-text="servicesEnabled ? 'AKTIF (ON)' : 'NONAKTIF (OFF)'"></span>
+                    </div>
                 </div>
             </div>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -12,7 +13,37 @@ class ServiceController extends Controller
     public function index()
     {
         $services = Service::orderBy('order_index', 'asc')->get();
-        return view('admin.services.index', compact('services'));
+        $featureEnabled = get_setting('enable_services', '1') !== '0';
+        return view('admin.services.index', compact('services', 'featureEnabled'));
+    }
+
+    /**
+     * Toggle global "Layanan Divisi" feature ON / OFF
+     */
+    public function toggleFeature(Request $request)
+    {
+        $current = get_setting('enable_services', '1') !== '0';
+        $newValue = $request->has('enable_services')
+            ? ($request->input('enable_services') == '1' ? '1' : '0')
+            : ($current ? '0' : '1');
+
+        Setting::set('enable_services', $newValue);
+        Setting::clearCache();
+
+        $statusLabel = $newValue === '1'
+            ? 'AKTIF (Ditampilkan di Website Publik)'
+            : 'NONAKTIF (Disembunyikan dari Website Publik)';
+
+        return back()->with('success', 'Fitur Layanan Divisi berhasil diubah menjadi: ' . $statusLabel);
+    }
+
+    /**
+     * Toggle individual service item active status ON / OFF
+     */
+    public function toggleStatus(Service $service)
+    {
+        $service->update(['is_active' => !$service->is_active]);
+        return back()->with('success', 'Status layanan "' . $service->title . '" berhasil diperbarui.');
     }
 
     public function create()

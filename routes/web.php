@@ -102,6 +102,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('carousels', \App\Http\Controllers\Admin\CarouselController::class);
         Route::post('menus/reset-defaults', [\App\Http\Controllers\Admin\MenuController::class, 'resetDefaults'])->name('menus.reset');
         Route::resource('menus', \App\Http\Controllers\Admin\MenuController::class)->except(['create', 'show']);
+        Route::post('services/toggle-feature', [ServiceController::class, 'toggleFeature'])->name('services.toggleFeature');
+        Route::post('services/{service}/toggle-status', [ServiceController::class, 'toggleStatus'])->name('services.toggleStatus');
         Route::resource('services', ServiceController::class);
         Route::post('team/chart', [TeamMemberController::class, 'updateChart'])->name('team.chart.update');
         Route::delete('team/chart', [TeamMemberController::class, 'removeChart'])->name('team.chart.remove');
