@@ -10,18 +10,60 @@
             activeSlide: 0, 
             slidesCount: {{ $carousels->count() }},
             autoplayTimer: null,
+            lightboxOpen: false,
+            lightboxImage: '',
+            lightboxTitle: '',
+            lightboxSubtitle: '',
+            lightboxLink: '',
+            lightboxLinkText: '',
+            slidesData: {{ Js::from($carousels->map(fn($s) => [
+                'image' => $s->image_path,
+                'title' => $s->title ?? '',
+                'subtitle' => $s->subtitle ?? '',
+                'link' => $s->button_link ?? '',
+                'linkText' => $s->button_text ?: 'Buka Tautan',
+            ])->values()) }},
             startAutoplay() {
+                if (this.lightboxOpen) return;
+                this.stopAutoplay();
                 this.autoplayTimer = setInterval(() => {
                     this.activeSlide = (this.activeSlide + 1) % this.slidesCount;
                 }, 5000);
             },
             stopAutoplay() {
-                clearInterval(this.autoplayTimer);
+                if (this.autoplayTimer) {
+                    clearInterval(this.autoplayTimer);
+                    this.autoplayTimer = null;
+                }
+            },
+            openLightbox(index) {
+                const slide = this.slidesData[index] || this.slidesData[this.activeSlide];
+                if (!slide) return;
+                this.lightboxImage = slide.image;
+                this.lightboxTitle = slide.title;
+                this.lightboxSubtitle = slide.subtitle;
+                this.lightboxLink = slide.link;
+                this.lightboxLinkText = slide.linkText;
+                this.lightboxOpen = true;
+                this.stopAutoplay();
+            },
+            closeLightbox() {
+                this.lightboxOpen = false;
+                this.startAutoplay();
+            },
+            nextLightboxSlide() {
+                this.activeSlide = (this.activeSlide + 1) % this.slidesCount;
+                this.openLightbox(this.activeSlide);
+            },
+            prevLightboxSlide() {
+                this.activeSlide = (this.activeSlide - 1 + this.slidesCount) % this.slidesCount;
+                this.openLightbox(this.activeSlide);
             }
          }" 
          x-init="startAutoplay()"
          @mouseenter="stopAutoplay()"
-         @mouseleave="startAutoplay()">
+         @mouseleave="if (!lightboxOpen) startAutoplay()"
+         @keydown.escape.window="if (lightboxOpen) closeLightbox()">
     
     <!-- Slides Wrapper -->
     <div class="relative w-full aspect-[16/7] sm:aspect-[21/8] lg:aspect-[24/8] min-h-[280px] sm:min-h-[380px] lg:min-h-[460px] max-h-[580px] flex items-center bg-slate-900">
@@ -33,26 +75,34 @@
              x-transition:leave="transition ease-in duration-500"
              x-transition:leave-start="opacity-100"
              x-transition:leave-end="opacity-0"
-             class="absolute inset-0 w-full h-full"
+             class="absolute inset-0 w-full h-full group/slide"
              style="display: {{ $index === 0 ? 'block' : 'none' }};">
             
-            <!-- Slide Background Image -->
-            @if(empty($slide->title) && empty($slide->subtitle) && !empty($slide->button_link))
-            <a href="{{ $slide->button_link }}" class="absolute inset-0 w-full h-full block z-0" title="{{ $slide->title ?? 'Buka tautan banner' }}">
-                <img src="{{ $slide->image_path }}" alt="{{ $slide->title ?? 'Banner Slide' }}" class="w-full h-full object-cover object-center" decoding="async" {{ $index > 0 ? 'loading=lazy' : 'fetchpriority=high' }}>
-            </a>
-            @else
-            <img src="{{ $slide->image_path }}" alt="{{ $slide->title ?? 'Banner Slide' }}" class="absolute inset-0 w-full h-full object-cover object-center z-0" decoding="async" {{ $index > 0 ? 'loading=lazy' : 'fetchpriority=high' }}>
-            @endif
+            <!-- Slide Background Image (Clickable to view full image) -->
+            <img src="{{ $slide->image_path }}" 
+                 alt="{{ $slide->title ?? 'Banner Slide' }}" 
+                 @click="openLightbox({{ $index }})"
+                 title="Klik untuk melihat gambar penuh"
+                 class="absolute inset-0 w-full h-full object-cover object-center z-0 cursor-zoom-in" 
+                 decoding="async" 
+                 {{ $index > 0 ? 'loading=lazy' : 'fetchpriority=high' }}>
+
+            <!-- Floating "Lihat Gambar Penuh" Action Pill (Top Right) -->
+            <button type="button"
+                    @click.stop="openLightbox({{ $index }})"
+                    class="absolute top-4 right-4 z-20 inline-flex items-center space-x-2 px-3.5 py-2 rounded-full bg-black/50 hover:bg-black/80 text-white text-xs font-semibold backdrop-blur-md border border-white/25 shadow-lg transition-all duration-200 hover:scale-105">
+                <i class="fa-solid fa-magnifying-glass-plus text-xs text-sky-400"></i>
+                <span class="hidden sm:inline">Lihat Gambar Penuh</span>
+            </button>
             
             <!-- Slide Content Overlay (Rendered whenever title/subtitle/button exists) -->
             @if(!empty($slide->title) || !empty($slide->subtitle) || (!empty($slide->button_text) && !empty($slide->button_link)))
-            <!-- Gradient Overlay for text readability -->
-            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent z-[1]"></div>
-            <div class="absolute inset-0 bg-black/25 z-[1]"></div>
+            <!-- Gradient Overlay for text readability (pointer-events-none so clicking empty areas opens full image) -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent z-[1] pointer-events-none"></div>
+            <div class="absolute inset-0 bg-black/25 z-[1] pointer-events-none"></div>
 
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center relative z-10 py-12 lg:py-20">
-                <div class="max-w-2xl space-y-4 sm:space-y-6">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center relative z-10 py-12 lg:py-20 pointer-events-none">
+                <div class="max-w-2xl space-y-4 sm:space-y-6 pointer-events-auto">
                     <div class="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase border border-white/30 text-white">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
                         <span>{{ get_setting('parent_institution', 'STIKES Panti Waluya') }}</span>
@@ -70,18 +120,13 @@
                     </p>
                     @endif
 
+                    @if($slide->button_text && $slide->button_link)
                     <div class="flex flex-wrap gap-3 sm:gap-4 pt-2">
-                        @if($slide->button_text && $slide->button_link)
                         <a href="{{ $slide->button_link }}" class="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-theme-primary text-white font-bold text-xs sm:text-sm shadow-xl hover:opacity-90 transition flex items-center transform hover:-translate-y-0.5">
                             {{ $slide->button_text }} <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
                         </a>
-                        @endif
-                        @if(get_setting('enable_services', '1') !== '0')
-                        <a href="{{ route('services') }}" class="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-white/15 backdrop-blur-md text-white font-semibold text-xs sm:text-sm border border-white/30 hover:bg-white/25 transition flex items-center">
-                            <i class="fa-solid fa-list-check mr-2"></i> Layanan Divisi
-                        </a>
-                        @endif
                     </div>
+                    @endif
                 </div>
             </div>
             @endif
@@ -107,6 +152,60 @@
         @endforeach
     </div>
     @endif
+
+    <!-- Fullscreen Banner Image Lightbox Modal -->
+    <div x-show="lightboxOpen"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         @click="closeLightbox()"
+         style="display: none;"
+         class="fixed inset-0 z-[100] bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-6">
+
+        <!-- Top Bar Controls -->
+        <div class="w-full max-w-6xl flex items-center justify-between mb-3 px-2" @click.stop>
+            <div class="text-xs sm:text-sm font-bold text-slate-200 truncate pr-4" x-text="lightboxTitle || 'Pratinjau Gambar Banner Penuh'"></div>
+            <div class="flex items-center space-x-2 shrink-0">
+                <a :href="lightboxImage" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center transition border border-white/15">
+                    <i class="fa-solid fa-up-right-from-square mr-1.5 text-[11px]"></i> Buka Tab Baru
+                </a>
+                <button type="button" @click="closeLightbox()" class="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center transition shadow">
+                    <i class="fa-solid fa-xmark mr-1.5"></i> Tutup
+                </button>
+            </div>
+        </div>
+
+        <!-- Full Image Container -->
+        <div class="relative flex items-center justify-center max-w-6xl w-full max-h-[80vh]" @click.stop>
+            @if($carousels->count() > 1)
+            <button type="button" @click="prevLightboxSlide()" class="absolute left-2 sm:-left-5 z-10 w-10 h-10 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center border border-white/20 shadow-lg transition">
+                <i class="fa-solid fa-chevron-left text-sm"></i>
+            </button>
+            @endif
+
+            <img :src="lightboxImage" :alt="lightboxTitle || 'Banner Penuh'" class="max-h-[78vh] max-w-full w-auto h-auto object-contain rounded-xl shadow-2xl border border-white/10 bg-slate-900">
+
+            @if($carousels->count() > 1)
+            <button type="button" @click="nextLightboxSlide()" class="absolute right-2 sm:-right-5 z-10 w-10 h-10 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center border border-white/20 shadow-lg transition">
+                <i class="fa-solid fa-chevron-right text-sm"></i>
+            </button>
+            @endif
+        </div>
+
+        <!-- Optional Bottom Caption & Link -->
+        <div x-show="lightboxSubtitle || lightboxLink" @click.stop class="mt-4 max-w-3xl text-center space-y-2">
+            <p x-show="lightboxSubtitle" x-text="lightboxSubtitle" class="text-xs sm:text-sm text-slate-300"></p>
+            <div x-show="lightboxLink" class="pt-1">
+                <a :href="lightboxLink" class="inline-flex items-center px-4 py-2 rounded-xl bg-theme-primary text-white text-xs font-bold shadow hover:opacity-90 transition">
+                    <span x-text="lightboxLinkText"></span>
+                    <i class="fa-solid fa-arrow-right ml-2 text-[11px]"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 </section>
 @else
 <!-- Default Hero Section (When no carousel slides are added) -->

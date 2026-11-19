@@ -338,6 +338,60 @@
         </div>
     </footer>
 
+    <!-- Floating Action Buttons (Scroll to Top & WhatsApp Floating Button) -->
+    @php
+        $waEnabled = get_setting('enable_whatsapp_floating', '1') !== '0';
+        $rawWaPhone = get_setting('contact_whatsapp', '6281234567890');
+        // Strip non-numeric characters (spaces, +, -, parentheses) as recommended for wa.me
+        $cleanWaPhone = preg_replace('/[^0-9]/', '', $rawWaPhone);
+        if (str_starts_with($cleanWaPhone, '0')) {
+            $cleanWaPhone = '62' . substr($cleanWaPhone, 1);
+        } elseif ($cleanWaPhone === '') {
+            $cleanWaPhone = '6281234567890';
+        }
+        $waMessage = get_setting('whatsapp_floating_message', 'Halo Admin ' . get_setting('division_short_name', 'STIKES Panti Waluya') . ', saya ingin bertanya mengenai informasi layanan.');
+        $waUrl = 'https://wa.me/' . $cleanWaPhone . ($waMessage ? '?text=' . urlencode($waMessage) : '');
+    @endphp
+
+    <div x-data="{ showTop: false }"
+         @scroll.window="showTop = (window.pageYOffset > 300)"
+         class="fixed bottom-6 right-6 z-50 flex flex-col items-center space-y-3">
+
+        <!-- Scroll to Top Button -->
+        <button x-show="showTop"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 translate-y-2"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 translate-y-2"
+                @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
+                type="button"
+                aria-label="Kembali ke atas"
+                style="display: none;"
+                class="w-11 h-11 rounded-full bg-slate-600/90 hover:bg-slate-800 text-white shadow-lg flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5 focus:outline-none">
+            <i class="fa-solid fa-arrow-up text-sm"></i>
+        </button>
+
+        @if($waEnabled)
+        <!-- WhatsApp Floating Button -->
+        <div class="whatsapp-button group relative flex items-center">
+            <!-- Tooltip Label on Hover -->
+            <span class="pointer-events-none absolute right-16 whitespace-nowrap rounded-xl bg-slate-900/90 px-3.5 py-2 text-xs font-semibold text-white opacity-0 shadow-lg transition-all duration-200 group-hover:opacity-100 group-hover:-translate-x-1 hidden sm:block">
+                Hubungi Kami via WhatsApp
+            </span>
+
+            <a href="{{ $waUrl }}"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Chat WhatsApp"
+               class="w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white border-[3px] border-white shadow-[0_6px_20px_rgba(37,211,102,0.45)] flex items-center justify-center transition-all duration-200 hover:scale-110 focus:outline-none">
+                <i class="fa-brands fa-whatsapp text-3xl leading-none"></i>
+            </a>
+        </div>
+        @endif
+    </div>
+
     @stack('scripts')
 </body>
 </html>

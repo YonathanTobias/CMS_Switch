@@ -12,6 +12,9 @@ class UserController extends Controller
 {
     public function index()
     {
+        // Normalize any legacy role names to 'admin'
+        User::whereNotIn('role', ['super_admin', 'admin'])->update(['role' => 'admin']);
+
         $users = User::latest()->paginate(15);
         return view('admin.users.index', compact('users'));
     }
@@ -21,7 +24,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email',
-            'role' => 'required|in:super_admin,division_admin',
+            'role' => 'required|in:super_admin,admin',
             'password' => 'required|min:6',
         ]);
 
@@ -36,7 +39,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'role' => 'required|in:super_admin,division_admin',
+            'role' => 'required|in:super_admin,admin',
             'password' => 'nullable|min:6',
         ]);
 

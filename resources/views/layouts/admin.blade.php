@@ -136,6 +136,7 @@
                     <span>Kategori</span>
                 </a>
 
+                @if(Auth::check() && Auth::user()->canManageFullContent())
                 <a href="{{ route('admin.events.index') }}" class="group relative flex items-center px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.events*') ? 'bg-theme-primary text-white font-bold shadow-lg shadow-theme-primary/25' : 'text-slate-400 hover:text-white hover:bg-slate-800/80 hover:translate-x-0.5' }}">
                     @if(request()->routeIs('admin.events*'))
                         <span class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-white"></span>
@@ -165,8 +166,10 @@
                     </div>
                     <span>Galeri Foto</span>
                 </a>
+                @endif
             </div>
 
+            @if(Auth::check() && Auth::user()->canManageFullContent())
             <!-- Group 3: Tampilan Website -->
             <div class="space-y-1">
                 <div class="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-2 flex items-center space-x-1.5">
@@ -256,13 +259,13 @@
                     @endif
                 </a>
             </div>
+            @endif
 
-            <!-- Group 5: Pengaturan Sistem (Super Admin Only) -->
-            @if(Auth::check() && Auth::user()->isSuperAdmin())
+            <!-- Group 5: Pengaturan Sistem -->
             <div class="space-y-1 pt-2 border-t border-slate-800/60">
                 <div class="px-3 text-[10px] font-extrabold uppercase tracking-wider text-amber-500/90 mb-2 flex items-center space-x-1.5">
                     <i class="fa-solid fa-shield-halved text-[9px] text-amber-500"></i>
-                    <span>Administrasi & IT</span>
+                    <span>Administrasi & Sistem</span>
                 </div>
 
                 <a href="{{ route('admin.settings.index') }}" class="group relative flex items-center px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.settings*') ? 'bg-theme-primary text-white font-bold shadow-lg shadow-theme-primary/25' : 'text-slate-400 hover:text-amber-300 hover:bg-slate-800/80 hover:translate-x-0.5' }}">
@@ -270,11 +273,12 @@
                         <span class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-white"></span>
                     @endif
                     <div class="w-7 h-7 rounded-lg flex items-center justify-center mr-2.5 transition {{ request()->routeIs('admin.settings*') ? 'bg-white/20 text-white' : 'bg-slate-800 text-amber-400 group-hover:bg-amber-500/20 group-hover:text-amber-300' }}">
-                        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                        <i class="fa-solid fa-sliders text-xs"></i>
                     </div>
-                    <span>Identitas & Preset</span>
+                    <span>{{ (Auth::check() && Auth::user()->isSuperAdmin()) ? 'Identitas & Preset' : 'Pengaturan Website' }}</span>
                 </a>
 
+                @if(Auth::check() && Auth::user()->isSuperAdmin())
                 <a href="{{ route('admin.users.index') }}" class="group relative flex items-center px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 {{ request()->routeIs('admin.users*') ? 'bg-theme-primary text-white font-bold shadow-lg shadow-theme-primary/25' : 'text-slate-400 hover:text-purple-300 hover:bg-slate-800/80 hover:translate-x-0.5' }}">
                     @if(request()->routeIs('admin.users*'))
                         <span class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-white"></span>
@@ -284,8 +288,8 @@
                     </div>
                     <span>Kelola Akun Admin</span>
                 </a>
+                @endif
             </div>
-            @endif
 
         </div>
 
@@ -330,7 +334,7 @@
                 </a>
                 @else
                 <span class="hidden md:inline-flex items-center text-xs px-3 py-1.5 rounded-lg bg-sky-50 text-sky-800 dark:bg-sky-950/50 dark:text-sky-300 border border-sky-200 dark:border-sky-800 font-semibold">
-                    <i class="fa-solid fa-user-shield mr-1.5 text-sky-600 dark:text-sky-400"></i> Admin Divisi
+                    <i class="fa-solid fa-user-shield mr-1.5 text-sky-600 dark:text-sky-400"></i> Admin
                 </span>
                 @endif
 
@@ -341,7 +345,7 @@
                         </div>
                         <div class="text-left hidden sm:block">
                             <div class="text-xs font-bold text-slate-700 dark:text-slate-200 leading-tight">{{ Auth::user()->name ?? 'Administrator' }}</div>
-                            <div class="text-[10px] text-slate-400 font-semibold">{{ (Auth::check() && Auth::user()->isSuperAdmin()) ? 'Admin IT' : 'Admin Divisi' }}</div>
+                            <div class="text-[10px] text-slate-400 font-semibold">{{ Auth::check() ? Auth::user()->role_badge : 'Admin' }}</div>
                         </div>
                         <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
                     </button>
@@ -350,10 +354,10 @@
                         <a href="{{ route('admin.profile') }}" class="block px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium">
                             <i class="fa-regular fa-user mr-2 text-slate-400"></i> Profil & Password
                         </a>
-                        @if(Auth::check() && Auth::user()->isSuperAdmin())
                         <a href="{{ route('admin.settings.index') }}" class="block px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium">
                             <i class="fa-solid fa-sliders mr-2 text-slate-400"></i> Pengaturan Divisi
                         </a>
+                        @if(Auth::check() && Auth::user()->isSuperAdmin())
                         <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium">
                             <i class="fa-solid fa-users-gear mr-2 text-slate-400"></i> Kelola User Admin
                         </a>

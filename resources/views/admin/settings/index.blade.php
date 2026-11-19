@@ -3,17 +3,28 @@
 @section('title', 'Identitas & Pengaturan Divisi')
 
 @section('content')
-<div class="space-y-8" x-data="{ activeTab: 'presets' }">
+<div class="space-y-8" x-data="{
+    activeTab: '{{ Auth::check() && Auth::user()->isSuperAdmin() ? 'presets' : 'general' }}',
+    waFloatingEnabled: '{{ old('enable_whatsapp_floating', $settings['enable_whatsapp_floating'] ?? '1') }}' === '1'
+}">
     <div>
-        <h1 class="text-2xl font-extrabold text-slate-900">Konfigurasi Identitas & Preset Divisi</h1>
-        <p class="text-xs text-slate-500 mt-1">Ubah identitas sistem ini menjadi divisi mana pun di STIKES Panti Waluya dengan 1-klik preset atau sesuaikan secara manual.</p>
+        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Konfigurasi Identitas & Pengaturan Website</h1>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            @if(Auth::check() && Auth::user()->isSuperAdmin())
+                Ubah identitas sistem ini menjadi divisi mana pun di STIKES Panti Waluya dengan 1-klik preset atau sesuaikan secara manual.
+            @else
+                Sesuaikan informasi identitas, warna tema, profil visi-misi, kontak WhatsApp, dan fitur website.
+            @endif
+        </p>
     </div>
 
     <!-- Navigation Tabs -->
     <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 text-xs font-bold">
+        @if(Auth::check() && Auth::user()->isSuperAdmin())
         <button @click="activeTab = 'presets'" :class="activeTab === 'presets' ? 'bg-amber-500 text-slate-950 shadow-md font-bold' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700'" class="px-4 py-2 rounded-xl transition flex items-center">
             <i class="fa-solid fa-wand-magic-sparkles mr-2 text-slate-950"></i> 1-Click Preset Switcher
         </button>
+        @endif
         <button @click="activeTab = 'general'" :class="activeTab === 'general' ? 'bg-theme-primary text-white shadow-md font-bold' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700'" class="px-4 py-2 rounded-xl transition flex items-center">
             <i class="fa-solid fa-id-card mr-2"></i> Identitas & Penamaan
         </button>
@@ -37,7 +48,8 @@
         </button>
     </div>
 
-    <!-- TAB 1: 1-CLICK PRESET SWITCHER -->
+    @if(Auth::check() && Auth::user()->isSuperAdmin())
+    <!-- TAB 1: 1-CLICK PRESET SWITCHER (SUPER ADMIN ONLY) -->
     <div x-show="activeTab === 'presets'" class="space-y-6">
         <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 sm:p-6 text-amber-900 text-xs">
             <div class="flex items-start space-x-3">
@@ -94,6 +106,7 @@
             @endforelse
         </div>
     </div>
+    @endif
 
     <!-- MAIN FORM FOR MANUAL CONFIGURATION -->
     <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
@@ -394,13 +407,38 @@
                 </div>
 
                 <div class="space-y-1">
-                    <label class="text-xs font-bold text-slate-700">WhatsApp Layanan</label>
-                    <input type="text" name="contact_whatsapp" value="{{ old('contact_whatsapp', $settings['contact_whatsapp'] ?? '') }}" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white">
+                    <label class="text-xs font-bold text-slate-700">WhatsApp Layanan (Format: 08xx / 628xx)</label>
+                    <input type="text" name="contact_whatsapp" value="{{ old('contact_whatsapp', $settings['contact_whatsapp'] ?? '6281234567890') }}" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white" placeholder="Contoh: 6281234567890 atau 081234567890">
+                    <p class="text-[11px] text-slate-400">Otomatis dikonversi ke format internasional (<code class="text-emerald-600">https://wa.me/62...</code>) pada tombol mengambang.</p>
                 </div>
 
                 <div class="space-y-1">
                     <label class="text-xs font-bold text-slate-700">Jam Operasional Layanan</label>
                     <input type="text" name="operating_hours" value="{{ old('operating_hours', $settings['operating_hours'] ?? 'Senin - Jumat: 08.00 - 16.00 WIB') }}" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white">
+                </div>
+
+                <!-- Switch ON/OFF WhatsApp Floating Button di Tab Kontak -->
+                <div class="sm:col-span-2 p-4 sm:p-5 bg-emerald-50/70 rounded-2xl border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="space-y-1 max-w-xl">
+                        <label class="text-xs font-bold text-slate-900 flex items-center">
+                            <i class="fa-brands fa-whatsapp text-emerald-600 text-base mr-2"></i> Tombol Mengambang WhatsApp (Floating Button)
+                        </label>
+                        <p class="text-[11px] text-slate-600 leading-relaxed">
+                            Tampilkan tombol WhatsApp melayang di pojok kanan bawah halaman publik seperti pada contoh gambar. Pengunjung dapat langsung klik untuk memulai chat WhatsApp.
+                        </p>
+                    </div>
+                    <div class="flex items-center space-x-3 shrink-0">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" x-model="waFloatingEnabled" class="sr-only peer">
+                            <div class="w-14 h-7 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-emerald-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-500"></div>
+                        </label>
+                        <span class="text-xs font-bold" :class="waFloatingEnabled ? 'text-emerald-700' : 'text-slate-500'" x-text="waFloatingEnabled ? 'AKTIF (ON)' : 'NONAKTIF (OFF)'"></span>
+                    </div>
+                </div>
+
+                <div class="space-y-1 sm:col-span-2" x-show="waFloatingEnabled">
+                    <label class="text-xs font-bold text-slate-700">Pesan Sapaan Otomatis WhatsApp (Saat Tombol Diklik)</label>
+                    <input type="text" name="whatsapp_floating_message" value="{{ old('whatsapp_floating_message', $settings['whatsapp_floating_message'] ?? 'Halo Admin, saya ingin bertanya mengenai informasi layanan.') }}" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white" placeholder="Contoh: Halo Admin, saya ingin bertanya mengenai...">
                 </div>
 
                 <div class="space-y-1 sm:col-span-2">
@@ -535,6 +573,46 @@
                 <div class="p-3 bg-white dark:bg-slate-900/80 rounded-xl border border-purple-100 dark:border-purple-900/40 text-[11px] text-slate-600 dark:text-slate-300 flex items-center space-x-2">
                     <i class="fa-solid fa-circle-info text-purple-600 dark:text-purple-400 text-sm"></i>
                     <span>Default: <strong class="text-slate-900 dark:text-white">Nonaktif (OFF)</strong>. Anda dapat mengaktifkannya kapan saja di masa depan.</span>
+                </div>
+            </div>
+
+            <!-- Feature 2: WhatsApp Floating Button (ON / OFF Switch) -->
+            <div class="p-5 sm:p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-[#25D366] text-white flex items-center justify-center text-2xl shrink-0 shadow-sm">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h4 class="text-sm font-extrabold text-slate-900 dark:text-white">WhatsApp Floating Button</h4>
+                                <span class="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 text-[9px] font-black uppercase">Live Chat Widget</span>
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-xl leading-relaxed">
+                                Menampilkan tombol mengambang WhatsApp beserta tombol <em>Scroll-to-Top</em> di pojok kanan bawah seluruh halaman website publik dengan format otomatis <code class="text-emerald-700 dark:text-emerald-300 bg-emerald-100/60 dark:bg-emerald-950/80 px-1 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/60">https://wa.me/nomor</code>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Toggle Switch (Synced via Alpine waFloatingEnabled) -->
+                    <div class="flex items-center space-x-3 shrink-0">
+                        <input type="hidden" name="enable_whatsapp_floating" :value="waFloatingEnabled ? '1' : '0'">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" x-model="waFloatingEnabled" class="sr-only peer">
+                            <div class="w-14 h-7 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none focus:ring-2 focus:ring-emerald-500 peer-focus:ring-2 peer-focus:ring-emerald-500 peer-focus:ring-offset-2 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-slate-300 dark:after:border-slate-600 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#25D366]"></div>
+                        </label>
+                        <span class="text-xs font-bold" :class="waFloatingEnabled ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400'" x-text="waFloatingEnabled ? 'AKTIF (ON)' : 'NONAKTIF (OFF)'"></span>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-white dark:bg-slate-900/80 rounded-xl border border-emerald-100 dark:border-emerald-900/40 text-[11px] text-slate-600 dark:text-slate-300 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-brands fa-whatsapp text-emerald-600 dark:text-emerald-400 text-sm"></i>
+                        <span>Nomor WA saat ini: <strong class="text-slate-900 dark:text-white">{{ $settings['contact_whatsapp'] ?? 'Belum diatur (Default: 6281234567890)' }}</strong></span>
+                    </div>
+                    <button type="button" @click="activeTab = 'contact'" class="text-emerald-600 dark:text-emerald-400 font-bold hover:underline">
+                        Ubah Nomor WA &rarr;
+                    </button>
                 </div>
             </div>
 

@@ -16,7 +16,7 @@ class EnsureSuperAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (!$request->user() || !$request->user()->isSuperAdmin()) {
-            return redirect()->route('admin.dashboard')->with('error', 'Akses ditolak. Fitur Konfigurasi Identitas & 1-Click Preset Switcher hanya dapat diakses oleh Admin IT (Super User).');
+            return redirect()->route('admin.dashboard')->with('error', 'Akses ditolak. Fitur 1-Click Preset Switcher & Kelola Akun Admin hanya dapat diakses oleh Super Admin.');
         }
 
         return $next($request);

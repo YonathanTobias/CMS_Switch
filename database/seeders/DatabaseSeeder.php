@@ -23,11 +23,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Create Admin IT (Super User) and Admin Divisi
+        // 1. Create Super Admin (Prodi / Divisi / IT) and Admin (Hanya Upload Berita)
         $superAdmin = User::updateOrCreate(
             ['email' => 'it@pantiwaluya.ac.id'],
             [
-                'name' => 'Admin IT (Super User)',
+                'name' => 'Super Admin (IT & Prodi)',
                 'role' => 'super_admin',
                 'password' => Hash::make('password123'),
                 'email_verified_at' => now(),
@@ -37,8 +37,8 @@ class DatabaseSeeder extends Seeder
         $divisionAdmin = User::updateOrCreate(
             ['email' => 'divisi@pantiwaluya.ac.id'],
             [
-                'name' => 'Staf Admin Divisi',
-                'role' => 'division_admin',
+                'name' => 'Super Admin Prodi / Divisi',
+                'role' => 'super_admin',
                 'password' => Hash::make('password123'),
                 'email_verified_at' => now(),
             ]
@@ -48,8 +48,19 @@ class DatabaseSeeder extends Seeder
         $admin = User::updateOrCreate(
             ['email' => 'admin@pantiwaluya.ac.id'],
             [
-                'name' => 'Administrator Utama (Super User)',
+                'name' => 'Super Admin Utama',
                 'role' => 'super_admin',
+                'password' => Hash::make('password123'),
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Create Admin (Hanya Upload Berita)
+        $newsAdmin = User::updateOrCreate(
+            ['email' => 'berita@pantiwaluya.ac.id'],
+            [
+                'name' => 'Admin (Upload Berita)',
+                'role' => 'admin',
                 'password' => Hash::make('password123'),
                 'email_verified_at' => now(),
             ]
@@ -81,7 +92,9 @@ class DatabaseSeeder extends Seeder
             // Kontak & Lokasi
             'contact_email' => 'lppm@pantiwaluya.ac.id',
             'contact_phone' => '(0341) 569275',
-            'contact_whatsapp' => '081234567890',
+            'contact_whatsapp' => '6281234567890',
+            'enable_whatsapp_floating' => '1',
+            'whatsapp_floating_message' => 'Halo Admin, saya ingin bertanya mengenai informasi layanan.',
             'contact_room' => 'Gedung Rektorat Lt. 2, Kampus STIKES Panti Waluya Malang',
             'contact_address' => 'Jl. Yulius Usman No. 62, Kasin, Kec. Klojen, Kota Malang, Jawa Timur 65117',
             'operating_hours' => 'Senin - Jumat: 08.00 - 16.00 WIB',

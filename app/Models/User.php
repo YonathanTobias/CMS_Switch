@@ -20,7 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'role', // 'super_admin' (Admin IT) or 'division_admin' (Admin Divisi)
+        'role', // 'super_admin' (Super Admin) or 'admin' (Admin)
         'password',
     ];
 
@@ -48,7 +48,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is Super Admin (Admin IT)
+     * Check if user is Super Admin (Akses Penuh termasuk 1-Click Preset Switcher & Kelola Admin)
      */
     public function isSuperAdmin(): bool
     {
@@ -56,11 +56,19 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is Division Admin
+     * Check if user is regular Admin (Akses semua fitur kecuali Preset Switcher & Kelola Admin)
      */
-    public function isDivisionAdmin(): bool
+    public function isAdmin(): bool
     {
-        return $this->role === 'division_admin';
+        return !$this->isSuperAdmin();
+    }
+
+    /**
+     * Both Super Admin and Admin can manage all operational division content
+     */
+    public function canManageFullContent(): bool
+    {
+        return true;
     }
 
     /**
@@ -68,6 +76,6 @@ class User extends Authenticatable
      */
     public function getRoleBadgeAttribute(): string
     {
-        return $this->role === 'super_admin' ? 'Admin IT (Super User)' : 'Admin Divisi';
+        return $this->isSuperAdmin() ? 'Super Admin' : 'Admin';
     }
 }

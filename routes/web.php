@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Middleware\EnsureFullContentAccess;
 use App\Http\Middleware\EnsureSuperAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -77,29 +78,30 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         /*
         |------------------------------------------------------------------
-        | Super Admin (Admin IT) Exclusive Routes
+        | Super Admin Exclusive Routes (1-Click Preset Switcher & Kelola Admin)
         |------------------------------------------------------------------
         */
         Route::middleware(EnsureSuperAdmin::class)->group(function () {
-            // Division Identity & 1-Click Preset Switcher
-            Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-            Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+            // 1-Click Preset Switcher (Super Admin Only)
             Route::post('/settings/apply-preset', [SettingController::class, 'applyPreset'])->name('settings.preset');
 
-            // User Management (Kelola Akun Admin)
+            // User Management / Kelola Akun Admin (Super Admin Only)
             Route::resource('users', UserController::class)->except(['create', 'show', 'edit']);
         });
 
         /*
         |------------------------------------------------------------------
-        | Operational Division Content Management (Super Admin & Division Admin)
+        | Operational Division Content & Settings (Super Admin & Admin)
         |------------------------------------------------------------------
         */
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+
+        Route::resource('posts', PostController::class);
+        Route::resource('categories', CategoryController::class)->except(['create', 'show', 'edit']);
         Route::resource('carousels', \App\Http\Controllers\Admin\CarouselController::class);
         Route::post('menus/reset-defaults', [\App\Http\Controllers\Admin\MenuController::class, 'resetDefaults'])->name('menus.reset');
         Route::resource('menus', \App\Http\Controllers\Admin\MenuController::class)->except(['create', 'show']);
-        Route::resource('posts', PostController::class);
-        Route::resource('categories', CategoryController::class)->except(['create', 'show', 'edit']);
         Route::resource('services', ServiceController::class);
         Route::post('team/chart', [TeamMemberController::class, 'updateChart'])->name('team.chart.update');
         Route::delete('team/chart', [TeamMemberController::class, 'removeChart'])->name('team.chart.remove');
